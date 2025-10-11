@@ -32,7 +32,7 @@ public abstract class ANN
 	protected final Chart trainResultsGraph = new Chart(new Point(60, 580), "Training results", 100) ;
 
 	protected final Data trainingData = new Data("input.json") ;
-	protected static final int STD_MAX_ITERATIONS = 2 ;
+	protected static final int STD_MAX_ITERATIONS = 100000 ;
 
 	public ANN(Point topLeftPos, int[] qtdNeuronsInLayer, ActivationFunction act)
 	{

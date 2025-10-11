@@ -22,8 +22,8 @@ public class ANN2 extends ANN
 	private List<List<SimpleMatrix>> deltaMatrices ;
 
 	private static final Point initialPanelPos = new Point(40, 300) ;
-	private static final int[] STD_QTD_NEURONS = new int[] {0, 4, 3, 0} ;
-	private static final double STD_INIT_LEARNING_RATE = 0.5 ;
+	private static final int[] STD_QTD_NEURONS = new int[] {0, 3, 2, 0} ;
+	private static final double STD_INIT_LEARNING_RATE = 0.05 ;
 
     public ANN2(int[] qtdNeuronsInLayer, boolean randomInitialWeights, boolean randomInitialBiases)
     {

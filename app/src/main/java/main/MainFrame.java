@@ -41,17 +41,17 @@ public class MainFrame extends JFrame
 	public void addButtons()
 	{
 
-		JButton UseButton = createButton(UseIcon);
+		JButton trainOneIteration = createButton(UseIcon);
 		JButton PlayButton = createButton(PlayIcon);
 		JButton NNButton = createButton(ANNIcon);
 		JButton GraphsButton = createButton(GraphsIcon);
 
-		UseButton.addActionListener(e -> mainPanel.useNetworks());
+		trainOneIteration.addActionListener(e -> mainPanel.trainOneIteration());
 		PlayButton.addActionListener(e -> mainPanel.switchRunTraining());
 		NNButton.addActionListener(e -> mainPanel.switchANNDisplay());
 		GraphsButton.addActionListener(e -> mainPanel.switchGraphsDisplay());
 		
-		// this.add(UseButton);
+		this.add(trainOneIteration);
 		this.add(PlayButton);
 		this.add(NNButton);
 		this.add(GraphsButton);

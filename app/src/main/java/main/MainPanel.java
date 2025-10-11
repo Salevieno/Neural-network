@@ -10,13 +10,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import charts.Chart;
-import charts.Dataset;
 import draw.Draw;
 import neural.network.ANN1;
 import neural.network.ANN2;
@@ -28,12 +25,12 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 	private static final long serialVersionUID = 1L;
 	private final Timer timer;
 	private final Color bgColor = new Color(10, 20, 50) ;
-	private final Dataset dataset = new Dataset() ;
-	private final Dataset dataset2 = new Dataset() ;
+	// private final Dataset dataset = new Dataset() ;
+	// private final Dataset dataset2 = new Dataset() ;
 	// private final Dataset dataset3 = new Dataset() ;
-	private final Chart graph = new Chart(new Point(60, 580), "Posição x", 100) ;
-	private final Chart graph2 = new Chart(new Point(260, 580), "Posição y", 100) ;
-	private final Chart graph3 = new Chart(new Point(460, 580), "Inputs", 100) ;
+	// private final Chart graph = new Chart(new Point(60, 580), "Posição x", 100) ;
+	// private final Chart graph2 = new Chart(new Point(260, 580), "Posição y", 100) ;
+	// private final Chart graph3 = new Chart(new Point(460, 580), "Inputs", 100) ;
 
 	private final ANN1 ann1 ;
 	private final ANN2 ann2 ;
@@ -56,34 +53,36 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 		ann1 = new ANN1(false) ;
 		ann2 = new ANN2(false, false) ;		
 
-		graph.addDataset(dataset);
-		graph.setSize(150) ;
-		graph.setGridColor(new Color(0, 0, 0, 60)) ;
-		graph.setDataSetColor(List.of(Color.blue)) ;
-		graph.setDataSetContourColor(List.of(Color.cyan)) ;
+		// graph.addDataset(dataset);
+		// graph.setSize(150) ;
+		// graph.setGridColor(new Color(0, 0, 0, 60)) ;
+		// graph.setDataSetColor(List.of(Color.blue)) ;
+		// graph.setDataSetContourColor(List.of(Color.cyan)) ;
 		
-		graph2.addDataset(dataset2);
-		graph2.setSize(150) ;
-		graph2.setGridColor(new Color(0, 0, 0, 60)) ;
-		graph2.setDataSetColor(List.of(Color.orange)) ;
-		graph2.setDataSetContourColor(List.of(Color.red)) ;
+		// graph2.addDataset(dataset2);
+		// graph2.setSize(150) ;
+		// graph2.setGridColor(new Color(0, 0, 0, 60)) ;
+		// graph2.setDataSetColor(List.of(Color.orange)) ;
+		// graph2.setDataSetContourColor(List.of(Color.red)) ;
 
-		graph3.setSize(150) ;
-		graph3.setGridColor(new Color(0, 0, 0, 60)) ;
-		graph3.setDataSetColor(List.of(new Color(0, 180, 60))) ;
-		graph3.setDataSetContourColor(List.of(new Color(0, 90, 60))) ;
+		// graph3.setSize(150) ;
+		// graph3.setGridColor(new Color(0, 0, 0, 60)) ;
+		// graph3.setDataSetColor(List.of(new Color(0, 180, 60))) ;
+		// graph3.setDataSetContourColor(List.of(new Color(0, 90, 60))) ;
 		
 		timer = new Timer(0, this);
 		timer.start();
 	}
 	
-	public void useNetworks()
+	public void trainOneIteration()
 	{
-		List<Double> inputs = List.of(0.2, 0.2) ;
-		ann1.use(inputs) ;
-		ann1.updateResults() ;
-		ann2.use(inputs) ;
-		ann2.updateResults() ;
+		// List<Double> inputs = List.of(0.2, 0.2) ;
+		// ann1.use(inputs) ;
+		// ann1.updateResults() ;
+		// ann2.use(inputs) ;
+		// ann2.updateResults() ;
+		ann2.train(trainingData.getDataPoints());
+		ann2.updateResults();
 	}
 	public void switchRunTraining() { RunTraining = !RunTraining ;}
 	public void switchANNDisplay() { ShowANN = !ShowANN ;}
@@ -96,9 +95,9 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 
 		// double[] targets = Util.Transpose(ann2.getTarget())[0];
 		// double[] outputs = Util.Transpose(ann2.getOutput())[0];
-		dataset.setX(trainingData.getDataPoints().get(0).getTargets()) ;
-		dataset.setY(ann2.getOutputsAsList()) ;
-		graph.updateDataset(dataset) ;
+		// dataset.setX(trainingData.getDataPoints().get(0).getTargets()) ;
+		// dataset.setY(ann2.getOutputsAsList()) ;
+		// graph.updateDataset(dataset) ;
 
 		ann2.run(trainingData.getDataPoints()) ;
 		ann2.updateResults() ;
