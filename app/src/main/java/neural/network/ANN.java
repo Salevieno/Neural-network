@@ -29,7 +29,7 @@ public abstract class ANN
 	protected InfoPanel infoPanel ;
 	protected ANNPanel annPanel ;
 	protected Dataset trainResultsDataset = new Dataset() ;
-	protected final Chart trainResultsGraph = new Chart(new Point(60, 580), "Training results", 100) ;
+	protected final Chart trainResultsGraph = new Chart(new Point(720, 485), "Training results", 100) ;
 
 	protected final Data trainingData = new Data("input.json") ;
 	protected static final int STD_MAX_ITERATIONS = 100000 ;
@@ -191,8 +191,7 @@ public abstract class ANN
 	}
 
 	public void displayTrainingResultGraph()
-	{
-		
+	{		
 		Point menuPos = Util.Translate(trainResultsGraph.getPos(), -25, 10) ;
 		Draw.menu(menuPos, Align.bottomLeft, 200 * 1, 200 * 1, 2, new Color[] { Main.palette[6], Main.palette[3] }, Main.palette[2]);
 		trainResultsGraph.display(Draw.DP) ;

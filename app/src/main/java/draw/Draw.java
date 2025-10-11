@@ -49,8 +49,8 @@ public abstract class Draw
 		Point topLeftBorder = Util.getPosAt(pos, align, Align.topLeft, size) ;
 		topLeftBorder = Util.Translate(topLeftBorder, -border, -border) ;
 
-    	DP.drawRect(topLeftBorder, Align.topLeft, size, Thickness, colors[0], ContourColor, 1.0) ;
-    	DP.drawRect(pos, align, new Dimension(l - 2*border, h - 2*border), Thickness, colors[1], Main.palette[3], 1.0) ;
+    	// DP.drawRect(topLeftBorder, Align.topLeft, size, Thickness, colors[0], ContourColor, 1.0) ;
+    	DP.drawRect(pos, align, new Dimension(l - 2*border, h - 2*border), Thickness, colors[1], Main.palette[0], 1.0) ;
     }
     public static void menu(Point pos, Align align, int l, int h)
     {

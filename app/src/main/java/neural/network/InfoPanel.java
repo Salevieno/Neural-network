@@ -8,7 +8,6 @@ import java.math.RoundingMode;
 
 import draw.Draw;
 import graphics.Align;
-import main.Main;
 import main.Palette;
 
 public class InfoPanel extends Draggable
@@ -24,7 +23,7 @@ public class InfoPanel extends Draggable
 
     public void display(boolean biasIsActive, int iter, double learningRate, double errorPerc, Mode mode)
 	{
-		Draw.menu(topLeftPos, Align.topLeft, size.width, size.height, 2, new Color[] { Palette.blue, Main.palette[1] }, Main.palette[2]);
+		Draw.menu(topLeftPos, Align.topLeft, size.width, size.height, 2, new Color[] { Palette.blue, Palette.cyan }, null);
 
 		int sy = 15;
 		Color textColor = Color.black ;
