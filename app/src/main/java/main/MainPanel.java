@@ -18,12 +18,10 @@ import javax.swing.Timer;
 import charts.Chart;
 import charts.Dataset;
 import draw.Draw;
-import graphics.Align;
 import neural.network.ANN1;
 import neural.network.ANN2;
 import neural.network.Data;
 import neural.network.Draggable;
-import utilities.Util;
 
 public class MainPanel extends JPanel implements ActionListener, MouseListener, MouseMotionListener 
 {
@@ -46,9 +44,6 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 	private boolean ShowGraphs = false;
 
 	private Point prevMousePos ;
-	// private List<Double> SaveError = new ArrayList<>();
-//	private double[] PlotError;
-	//private DrawFunctions DF;
 
 	public MainPanel(Dimension size)
 	{
@@ -73,11 +68,6 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 		graph2.setDataSetColor(List.of(Color.orange)) ;
 		graph2.setDataSetContourColor(List.of(Color.red)) ;
 
-		// double[] inputs = Util.Transpose(ann.getInput())[0];
-		// double[] targets = Util.Transpose(ann.getTarget())[0];
-		// dataset3.setX(DoubleStream.of(inputs).boxed().toList()) ;
-		// dataset3.setY(DoubleStream.of(targets).boxed().toList()) ;
-		// graph3.addDataset(dataset3);
 		graph3.setSize(150) ;
 		graph3.setGridColor(new Color(0, 0, 0, 60)) ;
 		graph3.setDataSetColor(List.of(new Color(0, 180, 60))) ;
@@ -104,11 +94,11 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 		// ann1.run(trainingData.getDataPoints()) ;
 		// ann1.updateResults() ;
 
-		// double[] targets = Util.Transpose(ann.getTarget())[0];
-		// double[] outputs = Util.Transpose(ann.getOutput())[0];
-		// dataset.setX(DoubleStream.of(targets).boxed().toList()) ;
-		// dataset.setY(DoubleStream.of(outputs).boxed().toList()) ;
-		// graph.updateDataset(dataset) ;
+		// double[] targets = Util.Transpose(ann2.getTarget())[0];
+		// double[] outputs = Util.Transpose(ann2.getOutput())[0];
+		dataset.setX(trainingData.getDataPoints().get(0).getTargets()) ;
+		dataset.setY(ann2.getOutputsAsList()) ;
+		graph.updateDataset(dataset) ;
 
 		ann2.run(trainingData.getDataPoints()) ;
 		ann2.updateResults() ;
@@ -116,29 +106,18 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 	
 	public void display()
 	{
-		int[] NGraphs = new int[] { 3, 1 };
-
 		ann1.displayInfoPanel() ;
 		ann2.displayInfoPanel() ;
 		if (ShowANN)
 		{
 			ann1.display();
 			ann2.display() ;
-		}
-		if (ShowGraphs)
-		{
-			Point menuPos = Util.Translate(graph.getPos(), -25, 10) ;
-			Draw.menu(menuPos, Align.bottomLeft, 200 * NGraphs[0], 200 * NGraphs[1], 2, new Color[] { Main.palette[6], Main.palette[3] }, Main.palette[2]);
-			graph.display(Draw.DP) ;
-			graph2.display(Draw.DP) ;
-			graph3.display(Draw.DP) ;
+			ann2.displayTrainingResultGraph();
 		}
 
-		Palette.display() ;
+		// Palette.display() ;
 	}
 
-
-	
 	@Override
 	public void paintComponent(Graphics g)
 	{

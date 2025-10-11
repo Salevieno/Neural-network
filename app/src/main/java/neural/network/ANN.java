@@ -1,10 +1,18 @@
 package neural.network;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
 import activationFunctions.ActivationFunction;
+import charts.Chart;
+import charts.Dataset;
+import draw.Draw;
+import graphics.Align;
+import main.Main;
+import main.Palette;
+import utilities.Util;
 
 public abstract class ANN
 {
@@ -20,9 +28,11 @@ public abstract class ANN
 
 	protected InfoPanel infoPanel ;
 	protected ANNPanel annPanel ;
+	protected Dataset trainResultsDataset = new Dataset() ;
+	protected final Chart trainResultsGraph = new Chart(new Point(60, 580), "Training results", 100) ;
 
 	protected final Data trainingData = new Data("input.json") ;
-	protected static final int STD_MAX_ITERATIONS = 1 ;
+	protected static final int STD_MAX_ITERATIONS = 2 ;
 
 	public ANN(Point topLeftPos, int[] qtdNeuronsInLayer, ActivationFunction act)
 	{
@@ -30,6 +40,14 @@ public abstract class ANN
         this.qtdIter = STD_MAX_ITERATIONS ;
 		this.infoPanel = new InfoPanel(new Point(topLeftPos.x, topLeftPos.y)) ;
 		this.annPanel = new ANNPanel(new Point(topLeftPos.x + 10 + infoPanel.size.width, topLeftPos.y)) ;
+		
+		trainResultsDataset = new Dataset();
+		trainResultsGraph.addDataset(trainResultsDataset);
+		trainResultsGraph.setSize(150) ;
+		trainResultsGraph.setGridColor(Palette.black) ;
+		trainResultsGraph.setDataSetColor(List.of(Palette.blue)) ;
+		trainResultsGraph.setDataSetContourColor(List.of(Palette.cyan)) ;
+
 		this.qtdNeuronsInLayer = qtdNeuronsInLayer ;
 		this.qtdLayers = qtdNeuronsInLayer.length ;
 		this.results = new Results() ;
@@ -170,6 +188,14 @@ public abstract class ANN
 	public void displayInfoPanel()
 	{
 		infoPanel.display(biasIsActive, iter, learningRate, results.getAvrError(), mode) ;
+	}
+
+	public void displayTrainingResultGraph()
+	{
+		
+		Point menuPos = Util.Translate(trainResultsGraph.getPos(), -25, 10) ;
+		Draw.menu(menuPos, Align.bottomLeft, 200 * 1, 200 * 1, 2, new Color[] { Main.palette[6], Main.palette[3] }, Main.palette[2]);
+		trainResultsGraph.display(Draw.DP) ;
 	}
 
 	public InfoPanel getInfoPanel() { return infoPanel ;}

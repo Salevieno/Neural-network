@@ -22,7 +22,7 @@ public class ANN2 extends ANN
 	private List<List<SimpleMatrix>> deltaMatrices ;
 
 	private static final Point initialPanelPos = new Point(40, 300) ;
-	private static final int[] STD_QTD_NEURONS = new int[] {0, 2, 2, 0} ;
+	private static final int[] STD_QTD_NEURONS = new int[] {0, 4, 3, 0} ;
 	private static final double STD_INIT_LEARNING_RATE = 0.5 ;
 
     public ANN2(int[] qtdNeuronsInLayer, boolean randomInitialWeights, boolean randomInitialBiases)
@@ -244,7 +244,7 @@ public class ANN2 extends ANN
 	{
 		for (int i = 0 ; i <= dWeights.size() - 1 ; i+= 1)
 		{
-			weights.set(i, weights.get(i).plus(dWeights.get(i).scale(-learningRate)));
+			weights.set(i, weights.get(i).plus(dWeights.get(i).scale(learningRate)));
 		}
 	}
 
@@ -262,7 +262,11 @@ public class ANN2 extends ANN
         // {
         //     updateLRate(error) ;
         // }
-    }
+
+		trainResultsDataset.setX(trainingData.get(0).getTargets()) ;
+		trainResultsDataset.setY(getOutputsAsList()) ;
+		trainResultsGraph.updateDataset(trainResultsDataset) ;
+	}
 
 	public void test(List<DataPoint> trainingDataPoints)
 	{
