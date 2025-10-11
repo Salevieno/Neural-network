@@ -37,8 +37,8 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 	private final Chart graph2 = new Chart(new Point(260, 580), "Posição y", 100) ;
 	private final Chart graph3 = new Chart(new Point(460, 580), "Inputs", 100) ;
 
-	private final ANN1 ann ;
-	private final ANN2 newANN ;
+	private final ANN1 ann1 ;
+	private final ANN2 ann2 ;
 	protected final Data trainingData = new Data("input.json") ;
 
 	private boolean RunTraining = false ;
@@ -58,8 +58,8 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 		this.addMouseListener(this);
         this.addMouseMotionListener(this);
 
-		ann = new ANN1(false) ;
-		newANN = new ANN2(false, false) ;		
+		ann1 = new ANN1(false) ;
+		ann2 = new ANN2(false, false) ;		
 
 		graph.addDataset(dataset);
 		graph.setSize(150) ;
@@ -90,10 +90,10 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 	public void useNetworks()
 	{
 		List<Double> inputs = List.of(0.2, 0.2) ;
-		ann.use(inputs) ;
-		ann.updateResults() ;
-		newANN.use(inputs) ;
-		newANN.updateResults() ;
+		ann1.use(inputs) ;
+		ann1.updateResults() ;
+		ann2.use(inputs) ;
+		ann2.updateResults() ;
 	}
 	public void switchRunTraining() { RunTraining = !RunTraining ;}
 	public void switchANNDisplay() { ShowANN = !ShowANN ;}
@@ -101,33 +101,34 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 	
 	private void run()
 	{
-		ann.run(trainingData.getDataPoints()) ;
-		ann.updateResults() ;
+		// ann1.run(trainingData.getDataPoints()) ;
+		// ann1.updateResults() ;
+
 		// double[] targets = Util.Transpose(ann.getTarget())[0];
 		// double[] outputs = Util.Transpose(ann.getOutput())[0];
 		// dataset.setX(DoubleStream.of(targets).boxed().toList()) ;
 		// dataset.setY(DoubleStream.of(outputs).boxed().toList()) ;
 		// graph.updateDataset(dataset) ;
-		newANN.run(trainingData.getDataPoints()) ;
-		newANN.updateResults() ;
-		System.out.println(1);
+
+		ann2.run(trainingData.getDataPoints()) ;
+		ann2.updateResults() ;
 	}
 	
 	public void display()
 	{
 		int[] NGraphs = new int[] { 3, 1 };
 
-		ann.displayInfoPanel() ;
-		newANN.displayInfoPanel() ;
+		ann1.displayInfoPanel() ;
+		ann2.displayInfoPanel() ;
 		if (ShowANN)
 		{
-			ann.display();
-			newANN.display() ;
+			ann1.display();
+			ann2.display() ;
 		}
 		if (ShowGraphs)
 		{
 			Point menuPos = Util.Translate(graph.getPos(), -25, 10) ;
-			Draw.menu(menuPos, Align.bottomLeft, 200 * NGraphs[0], 200 * NGraphs[1], 2, new Color[] { App.palette[6], App.palette[3] }, App.palette[2]);
+			Draw.menu(menuPos, Align.bottomLeft, 200 * NGraphs[0], 200 * NGraphs[1], 2, new Color[] { Main.palette[6], Main.palette[3] }, Main.palette[2]);
 			graph.display(Draw.DP) ;
 			graph2.display(Draw.DP) ;
 			graph3.display(Draw.DP) ;
@@ -197,7 +198,11 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 	@Override
 	public void mouseClicked(MouseEvent e)
 	{
-		
+		// print ANN2 state if right click
+		if (e.getButton() == MouseEvent.BUTTON3)
+		{
+			ann2.printState() ;
+		}
 	}
 
 	@Override

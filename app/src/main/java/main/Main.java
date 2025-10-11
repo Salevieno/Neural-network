@@ -2,7 +2,7 @@ package main;
 
 import java.awt.Color;
 
-public class App
+public class Main
 {
 	public static final Color[] palette;
     

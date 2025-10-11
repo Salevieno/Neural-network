@@ -8,7 +8,7 @@ import java.math.RoundingMode;
 
 import draw.Draw;
 import graphics.Align;
-import main.App;
+import main.Main;
 import main.Palette;
 
 public class InfoPanel extends Draggable
@@ -24,7 +24,7 @@ public class InfoPanel extends Draggable
 
     public void display(boolean biasIsActive, int iter, double learningRate, double errorPerc, Mode mode)
 	{
-		Draw.menu(topLeftPos, Align.topLeft, size.width, size.height, 2, new Color[] { Palette.blue, App.palette[1] }, App.palette[2]);
+		Draw.menu(topLeftPos, Align.topLeft, size.width, size.height, 2, new Color[] { Palette.blue, Main.palette[1] }, Main.palette[2]);
 
 		int sy = 15;
 		Color textColor = Color.black ;
@@ -35,7 +35,7 @@ public class InfoPanel extends Draggable
 			"Bias: " + String.valueOf(biasIsActive),
 			"Iteração: " + String.valueOf(iter),
 			"Lrate: " + String.valueOf(learningRate),
-			"Erro: " + String.valueOf(round(errorPerc, 2)) + "%",
+			"Erro: " + String.valueOf(round(errorPerc, 2)),
 			"Mode: " + mode
 		} ;
 		for (int i = 0 ; i <= lineContent.length - 1 ; i += 1)

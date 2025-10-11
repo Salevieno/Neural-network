@@ -23,7 +23,6 @@ class ANNTest
         mat.set(1,1,4);
         
         SimpleMatrix result = mat.mult(mat);
-        System.out.println(result);
     }
 
     @Test

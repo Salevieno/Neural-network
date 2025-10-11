@@ -7,13 +7,11 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Collections;
 import java.util.List;
 
-import charts.Chart;
 import graphics.Align;
 import graphics.DrawPrimitives;
-import main.App;
+import main.Main;
 import utilities.Util;
 
 public abstract class Draw
@@ -52,22 +50,22 @@ public abstract class Draw
 		topLeftBorder = Util.Translate(topLeftBorder, -border, -border) ;
 
     	DP.drawRect(topLeftBorder, Align.topLeft, size, Thickness, colors[0], ContourColor, 1.0) ;
-    	DP.drawRect(pos, align, new Dimension(l - 2*border, h - 2*border), Thickness, colors[1], App.palette[3], 1.0) ;
+    	DP.drawRect(pos, align, new Dimension(l - 2*border, h - 2*border), Thickness, colors[1], Main.palette[3], 1.0) ;
     }
     public static void menu(Point pos, Align align, int l, int h)
     {
-    	menu(pos, align, l, h, 1, new Color[] { App.palette[0], App.palette[4] }, App.palette[0]) ;
+    	menu(pos, align, l, h, 1, new Color[] { Main.palette[0], Main.palette[4] }, Main.palette[0]) ;
     }
     public static void menu(Point pos, Align align)
     {
-    	menu(pos, align, 500, 200, 1, new Color[] { App.palette[0], App.palette[4] }, App.palette[0]) ;
+    	menu(pos, align, 500, 200, 1, new Color[] { Main.palette[0], Main.palette[4] }, Main.palette[0]) ;
     }
     
 	private static void neurons(Point pos, Dimension size, int[] Nneurons)
 	{
-		int NeuronSize = 30 ;
+		int NeuronSize = 36 ;
 		int sx = (size.width - NeuronSize * Nneurons.length) / (Nneurons.length + 1);
-		Color color = App.palette[0] ;
+		Color fillColor = Main.palette[1] ;
 
 		for (int l = 0; l <= Nneurons.length - 1; l += 1)
 		{
@@ -75,7 +73,7 @@ public abstract class Draw
 			for (int n = 0; n <= Nneurons[l] - 1; n += 1)
 			{
 				Point NeuronPos = new Point(pos.x + l * (sx + NeuronSize) + sx + NeuronSize / 2, pos.y + n * (sy + NeuronSize) + sy + NeuronSize / 2) ;
-				DP.drawCircle(NeuronPos, NeuronSize, 2, color, App.palette[2]) ;
+				DP.drawCircle(NeuronPos, NeuronSize, 2, fillColor, Main.palette[2]) ;
 			}
 		}
 	}
@@ -84,7 +82,7 @@ public abstract class Draw
 	{
 		int NeuronSize = 30;
 		int sx = (size.width - NeuronSize * Nneurons.length) / (Nneurons.length + 1);
-		Color color = App.palette[2] ;
+		Color color = Main.palette[2] ;
 
 		for (int l = 0; l <= Nneurons.length - 1; l += 1)
 		{
@@ -105,7 +103,7 @@ public abstract class Draw
 		for (int i = 0 ; i <= Nneurons[0] - 1 ; i += 1)
 		{
 			Point NeuronPos = new Point(pos.x + sx / 2, pos.y + i * (sy + NeuronSize) + sy + NeuronSize / 2) ;
-			DP.drawText(NeuronPos, Align.center, 0, String.valueOf(round(inputs.get(i), 2)), smallFont, App.palette[2]) ;
+			DP.drawText(NeuronPos, Align.center, 0, String.valueOf(round(inputs.get(i), 2)), smallFont, Main.palette[2]) ;
 		}
 	}
 
@@ -117,7 +115,7 @@ public abstract class Draw
 		for (int i = 0 ; i <= Nneurons[Nneurons.length - 1] - 1 ; i += 1)
 		{
 			Point NeuronPos = new Point(pos.x + Nneurons[Nneurons.length - 1] * (sx + NeuronSize) + sx + NeuronSize / 2 + sx / 2, pos.y + i * (sy + NeuronSize) + sy + NeuronSize / 2) ;
-			DP.drawText(NeuronPos, Align.center, 0, String.valueOf(round(targets.get(i), 2)), smallFont, App.palette[2]) ;
+			DP.drawText(NeuronPos, Align.center, 0, String.valueOf(round(targets.get(i), 2)), smallFont, Main.palette[2]) ;
 		}
 	}
 
@@ -165,7 +163,7 @@ public abstract class Draw
 
 	public static void ann(Point pos, int[] Nneurons, List<Double> inputs, List<Double> targets, double[][] neuronvalue, double[][][] weight, double MaxWeight)
 	{
-		ann(pos, new Dimension(500, 200), Nneurons, inputs, targets, neuronvalue, weight, MaxWeight, true, App.palette[0]) ;
+		ann(pos, new Dimension(500, 200), Nneurons, inputs, targets, neuronvalue, weight, MaxWeight, true, Main.palette[0]) ;
 	}
 	
 	private static float round(double number, int decimals) { return BigDecimal.valueOf(number).setScale(decimals, RoundingMode.HALF_EVEN).floatValue() ;}

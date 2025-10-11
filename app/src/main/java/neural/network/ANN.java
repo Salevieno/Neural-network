@@ -8,7 +8,6 @@ import activationFunctions.ActivationFunction;
 
 public abstract class ANN
 {
-
     protected int iter ;
     protected int qtdIter ;
 	protected double learningRate ;
@@ -67,15 +66,31 @@ public abstract class ANN
 	}
 	
 	protected double calcOutputErrorPropagatedToLastLayer(double target, double output, double neuronInput) { return -(target - output) * act.df(neuronInput) ;}
-	protected double calcError(double target, double output) { return Math.pow(target - output, 2) * 1.0 / 2.0 ;}
+	protected double calcPointError(double target, double output) { return Math.pow(target - output, 2) * 1.0 / 2.0 ;}
+	protected double calcPointDError(double target, double output) { return -(target - output) ;}
 	
+	public double calcTotalError()
+	{
+		double error = 0;		
+		for (int t = 0; t <= trainingData.getDataPoints().size() - 1; t += 1)
+		{	
+			List<Double> targets = trainingData.getDataPoints().get(t).getTargets() ;
+			List<Double> outputs = getOutputsAsList() ;
+			for (int n = 0; n <= qtdNeuronsInLayer[qtdLayers - 1] - 1; n += 1)
+			{
+				error += calcPointError(targets.get(n), outputs.get(n)) ;
+			}		
+		}
+		return error ;
+	}
+
 	public double calcAvrErrorPerc()
 	{
 		double error = 0;
-		for (int t = 0; t <= trainingData.getDataPoints().size() - 1; t += 1)
+		for (int i = 0; i <= trainingData.getDataPoints().size() - 1; i += 1)
 		{
-			List<Double> inputs = trainingData.getDataPoints().get(t).getInputs() ;
-			List<Double> targets = trainingData.getDataPoints().get(t).getTargets() ;
+			List<Double> inputs = trainingData.getDataPoints().get(i).getInputs() ;
+			List<Double> targets = trainingData.getDataPoints().get(i).getTargets() ;
 			forwardPropagation(inputs) ;
 			List<Double> outputs = getOutputsAsList() ;
 			for (int n = 0; n <= qtdNeuronsInLayer[qtdLayers - 1] - 1; n += 1)
@@ -122,8 +137,10 @@ public abstract class ANN
 		{
 			case train:
 				if (qtdIter <= iter) { return ;}
+				System.out.println("\nIteration: " + (iter + 1) + " / " + qtdIter) ;
+				System.out.println("Data points");
+				System.out.println(trainingData.getDataPoints());
 				train(trainingDataPoints) ;
-				iter += 1 ;
 				
 				return ;
 
@@ -144,7 +161,10 @@ public abstract class ANN
 
 	public void updateResults()
 	{
-		results.setAvrError(calcAvrErrorPerc()) ;
+		if (qtdIter <= iter) { return ;}
+		System.out.println("Average Error: " + calcTotalError()) ;
+		results.setAvrError(calcTotalError()) ;
+		iter += 1 ;
 	}
 
 	public void displayInfoPanel()

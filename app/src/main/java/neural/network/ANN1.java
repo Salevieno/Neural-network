@@ -151,7 +151,7 @@ public class ANN1 extends ANN
 	{
 		if (vector.length != matrix[0].length)
 		{
-			System.out.println("Attempted to multiply matrices of different sizes at UtilGeral -> MatrixProd");
+			System.out.println("Error: Attempted to multiply matrices of different sizes at UtilGeral -> MatrixProd");
 			System.out.println("Vector size: " + vector.length + " Matrix size : " + matrix[0].length);
 			return null;
 		}
@@ -173,7 +173,7 @@ public class ANN1 extends ANN
 	{
 		if (vector.length != matrix[0].length)
 		{
-			System.out.println("Attempted to multiply matrices of different sizes");
+			System.out.println("Error: Attempted to multiply matrices of different sizes");
 			System.out.println("Vector size: " + vector.length + " Matrix size : " + matrix[0].length);
 			return null;
 		}
