@@ -23,7 +23,7 @@ public class ANN2 extends ANN
 	private List<List<SimpleMatrix>> deltaMatrices ;
 
 	private static final Point initialPanelPos = new Point(40, 300) ;
-	private static final int[] STD_QTD_NEURONS = new int[] {0, 2, 1, 2, 0} ;
+	private static final int[] STD_QTD_NEURONS = new int[] {0, 2, 3, 2, 0} ;
 	private static final double STD_INIT_LEARNING_RATE = 0.5 ;
 
     public ANN2(int[] qtdNeuronsInLayer, boolean randomInitialWeights, boolean randomInitialBiases)
@@ -57,12 +57,6 @@ public class ANN2 extends ANN
     {
         this(true, true) ;
     }
-
-	// private static double[] extractOutputs(List<SimpleMatrix> neurons)
-	// {
-	// 	SimpleMatrix lastLayer = neurons.get(neurons.size() - 1);
-	// 	return lastLayer.getDDRM().getData();
-	// }
 
 	private List<SimpleMatrix> initWeights(int Nlayers, boolean randomInitialWeights)
 	{
@@ -231,11 +225,7 @@ public class ANN2 extends ANN
 	public SimpleMatrix calcCMatrix(int layer)
 	{
 		// [C] of layer N = {f'(x0) f'(x1) ... f'(xn)}^T * {n0 n1 ... nn}. {f} vector for layer N + 1 and {n} vector for layer N
-		SimpleMatrix cMatrix = new SimpleMatrix(qtdNeuronsInLayer[layer + 1], qtdNeuronsInLayer[layer]) ;
-
-		SimpleMatrix derivativeMatrix = derivativeMatrix(neuronOutputs.get(layer + 1)) ;
-		cMatrix = derivativeMatrix.mult(neuronOutputs.get(layer).transpose()) ;
-
+		SimpleMatrix cMatrix = neuronOutputs.get(layer).mult(derivativeMatrix(neuronOutputs.get(layer + 1)).transpose()).transpose() ;
 		return cMatrix ;
 	}
 
@@ -260,20 +250,18 @@ public class ANN2 extends ANN
 		{
 			SimpleMatrix derivativeMatrix = derivativeMatrix(neuronOutputs.get(layer + 2)) ;
 			SimpleMatrix weightRow = weights.get(layer + 1).extractVector(true, outputID) ;
-			deltaMatrix = weightRow.transpose().scale(derivativeMatrix.get(outputID)) ;
+			SimpleMatrix deltaMatrixCol = weightRow.transpose().scale(derivativeMatrix.get(outputID)) ;
+			for (int col = 0 ; col <= deltaMatrix.getNumCols() - 1 ; col += 1)
+			{
+				deltaMatrix.insertIntoThis(0, col, deltaMatrixCol);
+			}
 
 			return deltaMatrix ;
 		}
 
 		// layers before that
 		SimpleMatrix dNeuronVector = derivativeMatrix(neuronOutputs.get(layer + 2)) ;
-		SimpleMatrix temp = new SimpleMatrix(weights.get(layer + 1).getNumRows(), weights.get(layer + 1).getNumCols()) ;
-		for (int col = 0 ; col <= weights.get(layer + 1).getNumCols() - 1 ; col += 1)
-		{
-			temp.setColumn(col, weights.get(layer + 1).getColumn(col).elementMult(dNeuronVector)) ;
-		}
-
-		SimpleMatrix deltaMatrixCol = temp.transpose().mult(deltaMatrices.get(layer + 1).get(outputID)).getColumn(0) ;
+		SimpleMatrix deltaMatrixCol = dNeuronVector.transpose().mult(deltaMatrices.get(layer + 1).get(outputID).elementMult(weights.get(layer + 1))).getColumn(0) ;
 		for (int col = 0 ; col <= deltaMatrix.getNumCols() - 1 ; col += 1)
 		{
 			deltaMatrix.insertIntoThis(0, col, deltaMatrixCol);

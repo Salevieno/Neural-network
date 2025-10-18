@@ -198,7 +198,6 @@ public abstract class ANN
 		trainResultsDataset.setY(getOutputsAsList()) ;
 		if (errorDataset.getX().isEmpty())
 		{
-			System.out.println(results.getAvrError());
 			errorDataset.addPoint(0, results.getAvrError());
 			errorChart.setMaxY(results.getAvrError());
 		}
