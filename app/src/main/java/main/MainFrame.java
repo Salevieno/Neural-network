@@ -3,7 +3,6 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Point;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -14,7 +13,7 @@ public class MainFrame extends JFrame
 {
 	private static final long serialVersionUID = 1L;
 	private static final Dimension BUTTON_STD_SIZE = new Dimension(40, 40) ;
-	private static final Dimension FRAME_SIZE = new Dimension(1000, 700) ;
+	private static final Dimension FRAME_SIZE = new Dimension(1100, 800) ;
 	private static final MainPanel mainPanel = new MainPanel(new Dimension(FRAME_SIZE.width, FRAME_SIZE.height - BUTTON_STD_SIZE.height - 20)) ;
 
 	private static final String ImagesPath ;
@@ -89,7 +88,7 @@ public class MainFrame extends JFrame
 		this.setLayout(new FlowLayout());
 		this.addButtons();
 		this.add(mainPanel);
-		this.setLocation(new Point(300, 50)) ;
+		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setVisible(true);
 	}

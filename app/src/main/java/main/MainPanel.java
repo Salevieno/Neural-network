@@ -60,7 +60,7 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 	public void trainOneIteration()
 	{
 		ann2.train(trainingData.getDataPoints());
-		ann2.updateResults();
+		ann2.updateResults(trainingData.getDataPoints());
 	}
 	public void switchRunTraining() { RunTraining = !RunTraining ;}
 	public void switchANNDisplay() { ShowANN = !ShowANN ;}
@@ -69,7 +69,6 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 	private void run()
 	{
 		ann2.run(trainingData.getDataPoints()) ;
-		ann2.updateResults() ;
 	}
 	
 	public void display()
@@ -78,9 +77,10 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 		ann2.displayInfoPanel() ;
 		if (ShowANN)
 		{
-			ann1.display();
+			ann1.display() ;
 			ann2.display() ;
-			ann2.displayTrainingResultGraph();
+			ann2.displayTrainingResultGraph() ;
+			ann2.displayErrorGraph() ;
 		}
 	}
 

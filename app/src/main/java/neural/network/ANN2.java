@@ -203,18 +203,7 @@ public class ANN2 extends ANN
         {
             forwardPropagation(trainingData.get(in).getInputs()) ;
             backPropagation(trainingData) ;
-            // output[in] = getOutputs(in, target) ;
         }
-
-        // error = calcAvrError(output, target) ;
-        // if (AdaptativeLrate)
-        // {
-        //     updateLRate(error) ;
-        // }
-
-		trainResultsDataset.setX(trainingData.get(0).getTargets()) ;
-		trainResultsDataset.setY(getOutputsAsList()) ;
-		trainResultsGraph.updateDataset(trainResultsDataset) ;
 	}
 
 	public void test(List<DataPoint> trainingDataPoints)
@@ -357,8 +346,6 @@ public class ANN2 extends ANN
 	}
 
 	public double calcTotalError(List<DataPoint> trainingData) { return trainingData.stream().map(dp -> calcDataPointError(dp)).mapToDouble(Double::valueOf).sum() ;}
-
-
 
 	private static double maxWeight(double[][][] weights)
 	{		

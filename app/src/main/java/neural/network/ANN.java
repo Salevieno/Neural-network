@@ -7,6 +7,7 @@ import java.util.List;
 
 import activationFunctions.ActivationFunction;
 import charts.Chart;
+import charts.ChartType;
 import charts.Dataset;
 import draw.Draw;
 import graphics.Align;
@@ -29,7 +30,9 @@ public abstract class ANN
 	protected InfoPanel infoPanel ;
 	protected ANNPanel annPanel ;
 	protected Dataset trainResultsDataset = new Dataset() ;
-	protected final Chart trainResultsGraph = new Chart(new Point(720, 485), "Training results", 100) ;
+	protected final Chart trainResultsGraph = new Chart(new Point(705, 485), "Training results", 100) ;
+	protected Dataset errorDataset = new Dataset() ;
+	protected final Chart errorChart = new Chart(new Point(915, 485), ChartType.line, "Error", 100) ;
 
 	protected final Data trainingData = new Data("input.json") ;
 	protected static final int STD_MAX_ITERATIONS = 100000 ;
@@ -47,6 +50,13 @@ public abstract class ANN
 		trainResultsGraph.setGridColor(Palette.black) ;
 		trainResultsGraph.setDataSetColor(List.of(Palette.blue)) ;
 		trainResultsGraph.setDataSetContourColor(List.of(Palette.cyan)) ;
+
+		errorDataset= new Dataset() ;
+		errorChart.addDataset(errorDataset);
+		errorChart.setSize(150) ;
+		errorChart.setGridColor(Palette.black) ;
+		errorChart.setDataSetColor(List.of(Palette.purple)) ;
+		errorChart.setDataSetContourColor(List.of(Palette.cyan)) ;
 
 		this.qtdNeuronsInLayer = qtdNeuronsInLayer ;
 		this.qtdLayers = qtdNeuronsInLayer.length ;
@@ -159,6 +169,7 @@ public abstract class ANN
 				// System.out.println("Data points");
 				// System.out.println(trainingData.getDataPoints());
 				train(trainingDataPoints) ;
+				updateResults(trainingDataPoints) ;
 				
 				return ;
 
@@ -177,12 +188,29 @@ public abstract class ANN
 		}	
 	}
 
-	public void updateResults()
+	public void updateResults(List<DataPoint> trainingDataPoints)
 	{
 		if (qtdIter <= iter) { return ;}
 		// System.out.println("Average Error: " + calcTotalError()) ;
 		results.setAvrError(calcTotalError()) ;
+
+		trainResultsDataset.setX(trainingDataPoints.get(0).getTargets()) ;
+		trainResultsDataset.setY(getOutputsAsList()) ;
+		if (errorDataset.getX().isEmpty())
+		{
+			System.out.println(results.getAvrError());
+			errorDataset.addPoint(0, results.getAvrError());
+			errorChart.setMaxY(results.getAvrError());
+		}
+		else
+		{
+			errorDataset.addPoint(errorDataset.getX().getLast() + 1 / 100.0, results.getAvrError());
+		}
+		trainResultsGraph.updateDataset(trainResultsDataset) ;
+
 		iter += 1 ;
+
+		
 	}
 
 	public void displayInfoPanel()
@@ -195,6 +223,13 @@ public abstract class ANN
 		Point menuPos = Util.Translate(trainResultsGraph.getPos(), -25, 10) ;
 		Draw.menu(menuPos, Align.bottomLeft, 200 * 1, 200 * 1, 2, new Color[] { Main.palette[6], Main.palette[3] }, Main.palette[2]);
 		trainResultsGraph.display(Draw.DP) ;
+	}
+
+	public void displayErrorGraph()
+	{
+		Point menuPos = Util.Translate(errorChart.getPos(), -25, 10) ;
+		Draw.menu(menuPos, Align.bottomLeft, 200 * 1, 200 * 1, 2, new Color[] { Main.palette[6], Main.palette[3] }, Main.palette[2]);
+		errorChart.display(Draw.DP) ;
 	}
 
 	public InfoPanel getInfoPanel() { return infoPanel ;}

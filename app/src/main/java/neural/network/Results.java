@@ -11,6 +11,5 @@ public class Results
     public void setAvrError(double avrError) {
         this.avrError = avrError;
     }
-
-    
 }
+
