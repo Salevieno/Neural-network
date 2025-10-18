@@ -155,9 +155,9 @@ public abstract class ANN
 		{
 			case train:
 				if (qtdIter <= iter) { return ;}
-				System.out.println("\nIteration: " + (iter + 1) + " / " + qtdIter) ;
-				System.out.println("Data points");
-				System.out.println(trainingData.getDataPoints());
+				// System.out.println("\nIteration: " + (iter + 1) + " / " + qtdIter) ;
+				// System.out.println("Data points");
+				// System.out.println(trainingData.getDataPoints());
 				train(trainingDataPoints) ;
 				
 				return ;
@@ -180,7 +180,7 @@ public abstract class ANN
 	public void updateResults()
 	{
 		if (qtdIter <= iter) { return ;}
-		System.out.println("Average Error: " + calcTotalError()) ;
+		// System.out.println("Average Error: " + calcTotalError()) ;
 		results.setAvrError(calcTotalError()) ;
 		iter += 1 ;
 	}

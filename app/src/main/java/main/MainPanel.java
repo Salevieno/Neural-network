@@ -52,23 +52,6 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 
 		ann1 = new ANN1(false) ;
 		ann2 = new ANN2(false, false) ;		
-
-		// graph.addDataset(dataset);
-		// graph.setSize(150) ;
-		// graph.setGridColor(new Color(0, 0, 0, 60)) ;
-		// graph.setDataSetColor(List.of(Color.blue)) ;
-		// graph.setDataSetContourColor(List.of(Color.cyan)) ;
-		
-		// graph2.addDataset(dataset2);
-		// graph2.setSize(150) ;
-		// graph2.setGridColor(new Color(0, 0, 0, 60)) ;
-		// graph2.setDataSetColor(List.of(Color.orange)) ;
-		// graph2.setDataSetContourColor(List.of(Color.red)) ;
-
-		// graph3.setSize(150) ;
-		// graph3.setGridColor(new Color(0, 0, 0, 60)) ;
-		// graph3.setDataSetColor(List.of(new Color(0, 180, 60))) ;
-		// graph3.setDataSetContourColor(List.of(new Color(0, 90, 60))) ;
 		
 		timer = new Timer(0, this);
 		timer.start();
@@ -76,11 +59,6 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 	
 	public void trainOneIteration()
 	{
-		// List<Double> inputs = List.of(0.2, 0.2) ;
-		// ann1.use(inputs) ;
-		// ann1.updateResults() ;
-		// ann2.use(inputs) ;
-		// ann2.updateResults() ;
 		ann2.train(trainingData.getDataPoints());
 		ann2.updateResults();
 	}
@@ -90,15 +68,6 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 	
 	private void run()
 	{
-		// ann1.run(trainingData.getDataPoints()) ;
-		// ann1.updateResults() ;
-
-		// double[] targets = Util.Transpose(ann2.getTarget())[0];
-		// double[] outputs = Util.Transpose(ann2.getOutput())[0];
-		// dataset.setX(trainingData.getDataPoints().get(0).getTargets()) ;
-		// dataset.setY(ann2.getOutputsAsList()) ;
-		// graph.updateDataset(dataset) ;
-
 		ann2.run(trainingData.getDataPoints()) ;
 		ann2.updateResults() ;
 	}
@@ -113,8 +82,6 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 			ann2.display() ;
 			ann2.displayTrainingResultGraph();
 		}
-
-		// Palette.display() ;
 	}
 
 	@Override

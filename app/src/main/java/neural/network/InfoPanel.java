@@ -34,7 +34,7 @@ public class InfoPanel extends Draggable
 			"Bias: " + String.valueOf(biasIsActive),
 			"Iteração: " + String.valueOf(iter),
 			"Lrate: " + String.valueOf(learningRate),
-			"Erro: " + String.valueOf(round(errorPerc, 2)),
+			"Erro: " + String.valueOf(round(errorPerc, 5)),
 			"Mode: " + mode
 		} ;
 		for (int i = 0 ; i <= lineContent.length - 1 ; i += 1)
