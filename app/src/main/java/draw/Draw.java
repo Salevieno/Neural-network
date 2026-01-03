@@ -11,6 +11,7 @@ import java.util.List;
 
 import graphics.Align;
 import graphics.DrawPrimitives;
+import graphics.UtilAlignment;
 import main.Main;
 import utilities.Util;
 
@@ -46,8 +47,8 @@ public abstract class Draw
     {
     	int border = 3;
 		Dimension size = new Dimension(l, h);
-		Point topLeftBorder = Util.getPosAt(pos, align, Align.topLeft, size) ;
-		topLeftBorder = Util.Translate(topLeftBorder, -border, -border) ;
+		Point topLeftBorder = UtilAlignment.getPosAt(pos, align, Align.topLeft, size) ;
+		topLeftBorder = Util.translate(topLeftBorder, -border, -border) ;
 
     	// DP.drawRect(topLeftBorder, Align.topLeft, size, Thickness, colors[0], ContourColor, 1.0) ;
     	DP.drawRect(pos, align, new Dimension(l - 2*border, h - 2*border), Thickness, colors[1], Main.palette[0], 1.0) ;
@@ -58,7 +59,7 @@ public abstract class Draw
     }
     public static void menu(Point pos, Align align)
     {
-    	menu(pos, align, 500, 200, 1, new Color[] { Main.palette[0], Main.palette[4] }, Main.palette[0]) ;
+    	menu(pos, align, 200, 200, 2, new Color[] { Main.palette[6], Main.palette[3] }, Main.palette[2]) ;
     }
     
 	private static void neurons(Point pos, Dimension size, int[] Nneurons)
@@ -114,8 +115,8 @@ public abstract class Draw
 		int sy = (size.height - NeuronSize * Nneurons[Nneurons.length - 1]) / (Nneurons[Nneurons.length - 1] + 1);
 		for (int i = 0 ; i <= Nneurons[Nneurons.length - 1] - 1 ; i += 1)
 		{
-			Point NeuronPos = new Point(pos.x + Nneurons[Nneurons.length - 1] * (sx + NeuronSize) + sx + NeuronSize / 2 + sx / 2, pos.y + i * (sy + NeuronSize) + sy + NeuronSize / 2) ;
-			DP.drawText(NeuronPos, Align.center, 0, String.valueOf(round(targets.get(i), 2)), smallFont, Main.palette[2]) ;
+			Point targetTextPos = new Point(pos.x + size.width - 30, pos.y + i * (sy + NeuronSize) + sy + NeuronSize / 2) ;
+			DP.drawText(targetTextPos, Align.center, 0, String.valueOf(round(targets.get(i), 2)), smallFont, Main.palette[2]) ;
 		}
 	}
 

@@ -24,7 +24,7 @@ public class ANN1 extends ANN
 	// private static final double L_RATE_MAX = 0.6 ;
 	// private static final double L_RATE_MIN = 0.0005 ;
 	private static final Point INITIAL_PANEL_POS = new Point(40, 60) ;
-	private static final int[] STD_QTD_NEURONS = new int[] {0, 2, 2, 0} ;
+	private static final int[] STD_QTD_NEURONS = new int[] {2, 2, 2, 3} ;
 	private static final List<DataPoint> TRAINING_DATA_POINTS = new Data("input.json").getDataPoints() ;
 	
 	public ANN1(List<DataPoint> trainingData, boolean randomInitialWeights)

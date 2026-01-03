@@ -15,7 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import draw.Draw;
-import neural.network.ANN1;
 import neural.network.ANN2;
 import neural.network.Data;
 import neural.network.Draggable;
@@ -32,8 +31,9 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 	// private final Chart graph2 = new Chart(new Point(260, 580), "Posição y", 100) ;
 	// private final Chart graph3 = new Chart(new Point(460, 580), "Inputs", 100) ;
 
-	private final ANN1 ann1 ;
-	private final ANN2 ann2 ;
+	// private final ANN1 ann1 ;
+	// private final ANN2 ann2 ;
+	private final ANN2 ann3 ;
 	protected final Data trainingData = new Data("input.json") ;
 
 	private boolean RunTraining = false ;
@@ -50,8 +50,9 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 		this.addMouseListener(this);
         this.addMouseMotionListener(this);
 
-		ann1 = new ANN1(false) ;
-		ann2 = new ANN2(false, false) ;		
+		// ann1 = new ANN1(true) ;
+		// ann2 = new ANN2(true, false) ;
+		ann3 = new ANN2(new Point(40, 500), new int[] {2, 2, 2, 3}, false, false) ;
 		
 		timer = new Timer(0, this);
 		timer.start();
@@ -59,8 +60,11 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 	
 	public void trainOneIteration()
 	{
-		ann2.train(trainingData.getDataPoints());
-		ann2.updateResults(trainingData.getDataPoints());
+		// ann2.train(trainingData.getDataPoints());
+		// ann2.updateResults(trainingData.getDataPoints());
+
+		ann3.train(trainingData.getDataPoints());
+		ann3.updateResults(trainingData.getDataPoints());
 	}
 	public void switchRunTraining() { RunTraining = !RunTraining ;}
 	public void switchANNDisplay() { ShowANN = !ShowANN ;}
@@ -68,19 +72,23 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 	
 	private void run()
 	{
-		ann2.run(trainingData.getDataPoints()) ;
+		// ann2.run(trainingData.getDataPoints()) ;
+		ann3.run(trainingData.getDataPoints()) ;
 	}
 	
 	public void display()
 	{
-		ann1.displayInfoPanel() ;
-		ann2.displayInfoPanel() ;
+		// ann2.displayInfoPanel() ;
+		ann3.displayInfoPanel() ;
 		if (ShowANN)
 		{
-			ann1.display() ;
-			ann2.display() ;
-			ann2.displayTrainingResultGraph() ;
-			ann2.displayErrorGraph() ;
+			// ann2.display() ;
+			// ann2.displayTrainingResultGraph() ;
+			// ann2.displayErrorGraph() ;
+
+			ann3.display() ;
+			ann3.displayTrainingResultGraph() ;
+			ann3.displayErrorGraph() ;
 		}
 	}
 
@@ -146,7 +154,7 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 		// print ANN2 state if right click
 		if (e.getButton() == MouseEvent.BUTTON3)
 		{
-			ann2.printState() ;
+			ann3.printState() ;
 		}
 	}
 

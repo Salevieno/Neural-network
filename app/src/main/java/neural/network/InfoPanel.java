@@ -27,18 +27,19 @@ public class InfoPanel extends Draggable
 
 		int sy = 15;
 		Color textColor = Color.black ;
+		Point titlePos = new Point(topLeftPos.x + 5, topLeftPos.y - 20) ;
 		Point contentPos = new Point(topLeftPos.x + 5, topLeftPos.y + 5) ;
 		String[] lineContent =
 		{
-			"General info",
 			"Bias: " + String.valueOf(biasIsActive),
 			"Iteração: " + String.valueOf(iter),
 			"Lrate: " + String.valueOf(learningRate),
 			"Erro: " + String.valueOf(round(errorPerc, 5)),
 			"Mode: " + mode
 		} ;
+		Draw.text(titlePos, "General info", Palette.cyan);
 		for (int i = 0 ; i <= lineContent.length - 1 ; i += 1)
-		{			
+		{
 			Draw.text(contentPos, lineContent[i], textColor);
 			contentPos.y += sy ;
 		}

@@ -4,5 +4,11 @@
         "plaintext": false,
         "markdown": false,
         "scminput": false
-    }
+    },
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.project.sourcePaths": ["app/src"],
+    "java.project.outputPath": "app/bin",
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar"
+    ]
 }
