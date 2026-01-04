@@ -52,7 +52,7 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 
 		// ann1 = new ANN1(true) ;
 		// ann2 = new ANN2(true, false) ;
-		ann3 = new ANN2(new Point(40, 500), new int[] {2, 2, 2, 3}, false, false) ;
+		ann3 = new ANN2(new Point(40, 500), new int[] {2, 2, 2, 1}, false, false) ;
 		
 		timer = new Timer(0, this);
 		timer.start();

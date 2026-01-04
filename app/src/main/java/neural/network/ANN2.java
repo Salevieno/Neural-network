@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.simple.SimpleMatrix;
@@ -71,8 +70,8 @@ public class ANN2 extends ANN
 	{
 		List<SimpleMatrix> weights = new ArrayList<>() ;
 
-		double startValue = 0.15 ;
-		final double inc = 0.05 ;
+		double startValue = 0.1 ;
+		final double inc = 0.1 ;
 		for (int layer = 0; layer <= Nlayers - 2; layer += 1)
 		{
 			int qtdNeuronsCurrentLayer = qtdNeuronsInLayer[layer] ;
@@ -91,7 +90,7 @@ public class ANN2 extends ANN
 						startValue += inc ;
 					}
 				}
-				startValue += inc ;
+				// startValue += inc ;
 			}
 		}
 
@@ -281,10 +280,10 @@ public class ANN2 extends ANN
 		// layers before that
 		// FIXME neuronInputs should be neuronOutputs for layer + 2?
 		SimpleMatrix dNeuronVector = derivativeMatrix(neuronOutputs.get(layer + 2)) ;
-		SimpleMatrix deltaMatrixCol = dNeuronVector.transpose().mult(deltaMatrices.get(layer + 1).get(outputID).elementMult(weights.get(layer + 1))).getColumn(0) ;
-		for (int col = 0 ; col <= deltaMatrix.getNumCols() - 1 ; col += 1)
+		SimpleMatrix deltaMatrixCol = dNeuronVector.transpose().mult(deltaMatrices.get(layer + 1).get(outputID).elementMult(weights.get(layer + 1))) ;
+		for (int row = 0 ; row <= deltaMatrix.getNumRows() - 1 ; row += 1)
 		{
-			deltaMatrix.insertIntoThis(0, col, deltaMatrixCol);
+			deltaMatrix.insertIntoThis(row, 0, SimpleMatrix.filled(1, deltaMatrix.getNumCols(), deltaMatrixCol.get(0, row)));
 		}
 
 		return deltaMatrix ;
