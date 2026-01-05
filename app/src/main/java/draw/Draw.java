@@ -111,7 +111,6 @@ public abstract class Draw
 	private static void outputValues(Point pos, Dimension size, int[] Nneurons, List<Double> targets)
 	{
 		int NeuronSize = 30;
-		int sx = (size.width - NeuronSize * Nneurons.length) / (Nneurons.length + 1);
 		int sy = (size.height - NeuronSize * Nneurons[Nneurons.length - 1]) / (Nneurons[Nneurons.length - 1] + 1);
 		for (int i = 0 ; i <= Nneurons[Nneurons.length - 1] - 1 ; i += 1)
 		{

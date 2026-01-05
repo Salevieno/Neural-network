@@ -1,16 +1,13 @@
-package neural.network;
+package network;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
 public class DataTest
 {
     
-	protected static final Data trainingData = new Data("input.json") ;
+	protected static final Data trainingData = new Data("training_data.json") ;
 
     // @Test
     // void createData()

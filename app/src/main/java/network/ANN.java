@@ -1,4 +1,4 @@
-package neural.network;
+package network;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -35,7 +35,8 @@ public abstract class ANN
 	protected Dataset errorDataset = new Dataset() ;
 	protected final Chart errorChart = new Chart(ChartType.line, new Point(915, 435), Align.center, "Error", 100) ;
 
-	protected static final Data trainingData = new Data("input.json") ;
+	protected static final Data TRAINING_DATA_POINTS = new Data("training_data.json") ;
+	protected static final int[] STD_QTD_NEURONS = new int[] {2, 2, 1, 2, 3} ;
 	protected static final boolean debugMode = true ;
 	protected static final int STD_MAX_ITERATIONS = 100000 ;
 
@@ -120,11 +121,12 @@ public abstract class ANN
 
 	public double calcAvrErrorPerc()
 	{
+		final List<DataPoint> dataPoints = TRAINING_DATA_POINTS.getDataPoints() ;
 		double error = 0;
-		for (int i = 0; i <= trainingData.getDataPoints().size() - 1; i += 1)
+		for (int i = 0; i <= dataPoints.size() - 1; i += 1)
 		{
-			List<Double> inputs = trainingData.getDataPoints().get(i).getInputs() ;
-			List<Double> targets = trainingData.getDataPoints().get(i).getTargets() ;
+			List<Double> inputs = dataPoints.get(i).getInputs() ;
+			List<Double> targets = dataPoints.get(i).getTargets() ;
 			forwardPropagation(inputs) ;
 			List<Double> outputs = getOutputsAsList() ;
 			for (int n = 0; n <= qtdNeuronsInLayer[qtdLayers - 1] - 1; n += 1)
@@ -132,7 +134,7 @@ public abstract class ANN
 				error += targets.get(n) != 0 ? Math.abs((targets.get(n) - outputs.get(n)) / targets.get(n)) : Math.abs((targets.get(n) - outputs.get(n)) / 1) ;
 			}
 		}
-		return 100 * error / (trainingData.getDataPoints().size() * qtdNeuronsInLayer[qtdLayers - 1])  ;
+		return 100 * error / (dataPoints.size() * qtdNeuronsInLayer[qtdLayers - 1])  ;
 	}
 
 	public Map<DataPoint, List<Double>> getLastOutputsPerDataPoint() { return lastOutputsPerDataPoint ;}

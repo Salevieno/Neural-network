@@ -15,15 +15,16 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import draw.Draw;
-import neural.network.ANN2;
-import neural.network.Data;
-import neural.network.Draggable;
+import network.ANNMatricial;
+import network.Data;
+import network.Draggable;
 
 public class MainPanel extends JPanel implements ActionListener, MouseListener, MouseMotionListener 
 {
 	private static final long serialVersionUID = 1L;
 	private final Timer timer;
 	private final Color bgColor = new Color(10, 20, 50) ;
+	private final Data trainingData = new Data("training_data.json") ;
 	// private final Dataset dataset = new Dataset() ;
 	// private final Dataset dataset2 = new Dataset() ;
 	// private final Dataset dataset3 = new Dataset() ;
@@ -33,12 +34,11 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 
 	// private final ANN1 ann1 ;
 	// private final ANN2 ann2 ;
-	private final ANN2 ann3 ;
-	protected final Data trainingData = new Data("input.json") ;
+	private final ANNMatricial ann3 ;
 
-	private boolean RunTraining = false ;
-	private boolean ShowANN = true ;
-	private boolean ShowGraphs = false;
+	private boolean trainingIsRunning = false ;
+	private boolean showANN = true ;
+	private boolean showGraphs = false;
 
 	private Point prevMousePos ;
 
@@ -52,7 +52,7 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 
 		// ann1 = new ANN1(true) ;
 		// ann2 = new ANN2(true, false) ;
-		ann3 = new ANN2(new Point(40, 500), new int[] {2, 2, 2, 1}, false, false) ;
+		ann3 = new ANNMatricial(new Point(40, 500), new int[] {2, 3, 2, 1}, false, false) ;
 		
 		timer = new Timer(0, this);
 		timer.start();
@@ -66,9 +66,9 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 		ann3.train(trainingData.getDataPoints());
 		ann3.updateResults(trainingData.getDataPoints());
 	}
-	public void switchRunTraining() { RunTraining = !RunTraining ;}
-	public void switchANNDisplay() { ShowANN = !ShowANN ;}
-	public void switchGraphsDisplay() { ShowGraphs = !ShowGraphs ;}
+	public void switchRunTraining() { trainingIsRunning = !trainingIsRunning ;}
+	public void switchANNDisplay() { showANN = !showANN ;}
+	public void switchGraphsDisplay() { showGraphs = !showGraphs ;}
 	
 	private void run()
 	{
@@ -80,7 +80,7 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 	{
 		// ann2.displayInfoPanel() ;
 		ann3.displayInfoPanel() ;
-		if (ShowANN)
+		if (showANN)
 		{
 			// ann2.display() ;
 			// ann2.displayTrainingResultGraph() ;
@@ -97,7 +97,7 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 	{
 		super.paintComponent(g);
 		Draw.setGraphics((Graphics2D) g);
-		if (RunTraining)
+		if (trainingIsRunning)
 		{
 			run() ;
 		}

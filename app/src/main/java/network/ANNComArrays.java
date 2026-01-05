@@ -1,4 +1,4 @@
-package neural.network;
+package network;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -7,7 +7,7 @@ import java.util.List;
 
 import activationFunctions.Sigmoid;
 
-public class ANN1 extends ANN
+public class ANNComArrays extends ANN
 {
 
 	private double[][] neuronvalue;
@@ -18,16 +18,14 @@ public class ANN1 extends ANN
 	private List<Double[]> output;
 
 	private int[] multvec;
+	protected static final Point INITIAL_PANEL_POS = new Point(40, 60) ;
 	
 	// private boolean adaptativeLRate ;
 	
 	// private static final double L_RATE_MAX = 0.6 ;
 	// private static final double L_RATE_MIN = 0.0005 ;
-	private static final Point INITIAL_PANEL_POS = new Point(40, 60) ;
-	private static final int[] STD_QTD_NEURONS = new int[] {2, 2, 2, 3} ;
-	private static final List<DataPoint> TRAINING_DATA_POINTS = new Data("input.json").getDataPoints() ;
 	
-	public ANN1(List<DataPoint> trainingData, boolean randomInitialWeights)
+	public ANNComArrays(List<DataPoint> trainingData, boolean randomInitialWeights)
 	{
 		super(INITIAL_PANEL_POS, STD_QTD_NEURONS, new Sigmoid()) ;
 		
@@ -42,9 +40,9 @@ public class ANN1 extends ANN
 		this.output = new ArrayList<>() ;
 	}
 	
-	public ANN1(boolean randomInitialWeights)
+	public ANNComArrays(boolean randomInitialWeights)
 	{
-		this(TRAINING_DATA_POINTS, randomInitialWeights) ;
+		this(TRAINING_DATA_POINTS.getDataPoints(), randomInitialWeights) ;
 	}
 
 	private double[][] initNeurons(int Nlayers, int[] Nneurons)
@@ -134,7 +132,6 @@ public class ANN1 extends ANN
 	{
 		forwardPropagationWithReturn(input) ;
 	}
-
 
 	private static int[] calcProdVec(int Nlayers, int[] Nneurons)
 	{
@@ -242,7 +239,6 @@ public class ANN1 extends ANN
 		UpdateWeights() ;
 		return Dweight;
 	}
-	
 
 	private double dEdy(double target, double neuronvalue)
 	{
@@ -381,7 +377,7 @@ public class ANN1 extends ANN
 	
 	public void display()
 	{
-		annPanel.display(qtdNeuronsInLayer, trainingData.getDataPoints().get(0).getInputs(), trainingData.getNormalizedDataPoints().get(0).getTargets(), neuronvalue, weights, maxWeight(weights)) ;
+		annPanel.display(qtdNeuronsInLayer, TRAINING_DATA_POINTS.getDataPoints().get(0).getInputs(), TRAINING_DATA_POINTS.getNormalizedDataPoints().get(0).getTargets(), neuronvalue, weights, maxWeight(weights)) ;
 	}
 
 }

@@ -1,28 +1,20 @@
-package neural.network;
+package network;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.IntStream;
-
-import org.ejml.simple.SimpleMatrix;
 import org.junit.jupiter.api.Test;
 
-class ANNTest
+class ANNComArraysTest
 {
     @Test
     void matrix()
     {
     
-        SimpleMatrix mat = new SimpleMatrix(2, 2);
-        mat.set(0,0,1);
-        mat.set(0,1,2);
-        mat.set(1,0,3);
-        mat.set(1,1,4);
+        // SimpleMatrix mat = new SimpleMatrix(2, 2);
+        // mat.set(0,0,1);
+        // mat.set(0,1,2);
+        // mat.set(1,0,3);
+        // mat.set(1,1,4);
         
-        SimpleMatrix result = mat.mult(mat);
+        // SimpleMatrix result = mat.mult(mat);
     }
 
     // @Test

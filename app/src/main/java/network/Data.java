@@ -1,4 +1,4 @@
-package neural.network;
+package network;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -73,7 +73,7 @@ public class Data
 	{
 		List<DataPoint> trainingData = new ArrayList<>() ;
 		// Load the JSON file from the resources folder
-        InputStream inputStream = ANN2.class.getResourceAsStream("/data/" + fileName);
+        InputStream inputStream = ANNMatricial.class.getResourceAsStream("/data/" + fileName);
         if (inputStream == null)
 		{
             return null ;

@@ -1,4 +1,4 @@
-package neural.network;
+package network;
 
 import java.awt.Color;
 import java.awt.Dimension;

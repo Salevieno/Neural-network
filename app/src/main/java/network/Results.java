@@ -1,4 +1,4 @@
-package neural.network;
+package network;
 
 public class Results
 {

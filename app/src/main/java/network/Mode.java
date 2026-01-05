@@ -1,4 +1,4 @@
-package neural.network ;
+package network ;
 
 public enum Mode {
     train,
