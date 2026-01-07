@@ -27,7 +27,7 @@ public class ANNComArrays extends ANN
 	
 	public ANNComArrays(List<DataPoint> trainingData, boolean randomInitialWeights)
 	{
-		super(INITIAL_PANEL_POS, STD_QTD_NEURONS, new Sigmoid()) ;
+		super(STD_QTD_NEURONS, new Sigmoid()) ;
 		
         this.iter = 0 ;
 		this.qtdNeuronsInLayer = new int[] {trainingData.get(0).getInputs().size(), 2, 2, trainingData.get(0).getTargets().size()} ;
@@ -355,29 +355,5 @@ public class ANNComArrays extends ANN
 	public double[][] getBiases() {return biases ;}
 	public List<Double[]> getOutput() {return output ;}
 	public List<Double> getOutputsAsList() { return Arrays.stream(neuronvalue[qtdLayers - 1]).boxed().toList() ;}
-
-	private static double maxWeight(double[][][] weight)
-	{		
-		double MaxWeight = weight[0][0][0];
-		for (int i = 0; i <= weight.length - 1; i += 1)
-        {
-			for (int j = 0; j <= weight[i].length - 1; j += 1)
-	        {
-				for (int k = 0; k <= weight[i][j].length - 1; k += 1)
-		        {
-					if (MaxWeight < Math.abs(weight[i][j][k]))
-					{
-						MaxWeight = Math.abs(weight[i][j][k]);
-					}
-		        }
-	        }
-        }
-		return MaxWeight ;
-	}
-	
-	public void display()
-	{
-		annPanel.display(qtdNeuronsInLayer, TRAINING_DATA_POINTS.getDataPoints().get(0).getInputs(), TRAINING_DATA_POINTS.getNormalizedDataPoints().get(0).getTargets(), neuronvalue, weights, maxWeight(weights)) ;
-	}
 
 }

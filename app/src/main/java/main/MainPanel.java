@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import draw.Draw;
-import network.ANNMatricial;
+import network.ANNMatricialVisual;
 import network.Data;
 import network.Draggable;
 
@@ -25,16 +25,7 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 	private final Timer timer;
 	private final Color bgColor = new Color(10, 20, 50) ;
 	private final Data trainingData = new Data("training_data.json") ;
-	// private final Dataset dataset = new Dataset() ;
-	// private final Dataset dataset2 = new Dataset() ;
-	// private final Dataset dataset3 = new Dataset() ;
-	// private final Chart graph = new Chart(new Point(60, 580), "Posição x", 100) ;
-	// private final Chart graph2 = new Chart(new Point(260, 580), "Posição y", 100) ;
-	// private final Chart graph3 = new Chart(new Point(460, 580), "Inputs", 100) ;
-
-	// private final ANN1 ann1 ;
-	// private final ANN2 ann2 ;
-	private final ANNMatricial ann3 ;
+	private final ANNMatricialVisual ann3 ;
 
 	private boolean trainingIsRunning = false ;
 	private boolean showANN = true ;
@@ -50,9 +41,7 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 		this.addMouseListener(this);
         this.addMouseMotionListener(this);
 
-		// ann1 = new ANN1(true) ;
-		// ann2 = new ANN2(true, false) ;
-		ann3 = new ANNMatricial(new Point(40, 500), new int[] {2, 3, 2, 1}, false, false) ;
+		ann3 = new ANNMatricialVisual(new Point(40, 500), new int[] {2, 1}, false, false) ;
 		
 		timer = new Timer(0, this);
 		timer.start();
@@ -60,11 +49,11 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 	
 	public void trainOneIteration()
 	{
-		// ann2.train(trainingData.getDataPoints());
-		// ann2.updateResults(trainingData.getDataPoints());
-
 		ann3.train(trainingData.getDataPoints());
-		ann3.updateResults(trainingData.getDataPoints());
+		if (ann3 instanceof ANNMatricialVisual)
+		{
+			((ANNMatricialVisual) ann3).updateResults(trainingData.getDataPoints()) ;
+		}
 	}
 	public void switchRunTraining() { trainingIsRunning = !trainingIsRunning ;}
 	public void switchANNDisplay() { showANN = !showANN ;}
