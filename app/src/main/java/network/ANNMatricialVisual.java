@@ -16,14 +16,10 @@ import utilities.Util;
 
 public class ANNMatricialVisual extends ANNMatricial
 {
-	protected InfoPanel infoPanel ;
-	protected ANNPanel annPanel ;
-
-	protected static final Point INITIAL_PANEL_POS = new Point(40, 60) ;
-	protected Dataset trainResultsDataset = new Dataset() ;
-	protected final Chart trainResultsGraph = new Chart(ChartType.radar, new Point(705, 435), Align.center, "Training results", 100) ;
-	protected Dataset errorDataset = new Dataset() ;
-	protected final Chart errorChart = new Chart(ChartType.line, new Point(915, 435), Align.center, "Error", 100) ;
+	protected final InfoPanel infoPanel ;
+	protected final ANNPanel annPanel ;
+	protected final Chart trainResultsGraph ;
+	protected final Chart errorChart ;
     
     public ANNMatricialVisual(Point topLeftPos, int[] qtdNeuronsInLayer, boolean randomizeInitialWeights, boolean randomizeInitialBiases)
     {
@@ -32,30 +28,24 @@ public class ANNMatricialVisual extends ANNMatricial
 		this.infoPanel = new InfoPanel(new Point(topLeftPos.x, topLeftPos.y)) ;
 		this.annPanel = new ANNPanel(new Point(topLeftPos.x + 10 + infoPanel.size.width, topLeftPos.y)) ;
 
-		errorDataset= new Dataset() ;
-		errorChart.addDataset(errorDataset);
-		errorChart.setSize(150) ;
-		errorChart.setPos(Util.translate(INITIAL_PANEL_POS, 730 + 205, 97));
-		errorChart.setGridColor(Palette.black) ;
+		errorChart = new Chart(ChartType.line, new Point(915, 435), Align.center, "Error", 150) ;
+		errorChart.addDataset(new Dataset());
+		errorChart.setPos(Util.translate(topLeftPos, 730 + 205, 97));
 		errorChart.setDataSetColor(List.of(Palette.purple)) ;
-		errorChart.setDataSetContourColor(List.of(Palette.cyan)) ;
 		
-		trainResultsDataset = new Dataset();
-		trainResultsGraph.addDataset(trainResultsDataset);
-		trainResultsGraph.setSize(150) ;
-		trainResultsGraph.setPos(Util.translate(INITIAL_PANEL_POS, 730, 97));
-		trainResultsGraph.setGridColor(Palette.black) ;
+		trainResultsGraph = new Chart(ChartType.radar, new Point(705, 435), Align.center, "Training results", 150) ;
+		trainResultsGraph.addDataset(new Dataset());
+		trainResultsGraph.setPos(Util.translate(topLeftPos, 730, 97));
 		trainResultsGraph.setDataSetColor(List.of(Palette.blue)) ;
-		trainResultsGraph.setDataSetContourColor(List.of(Palette.cyan)) ;
     }
 
 	public void updateResults(List<DataPoint> trainingDataPoints)
 	{
 		if (qtdIter <= iter) { return ;}
 
-		results.setAvrError(calcTotalError(trainingDataPoints)) ;
+		// results.setAvrError(calcTotalError(trainingDataPoints)) ;
 
-		trainResultsDataset.setX(trainingDataPoints.stream().map(trainingDataPoints::indexOf).map(d -> (double)d).toList()) ;
+		trainResultsGraph.getData().get(0).setX(trainingDataPoints.stream().map(trainingDataPoints::indexOf).map(d -> (double)d).toList()) ;
 		List<Double> errorOutputsToTargets = new ArrayList<>() ;
 		for (int i = 0 ; i <= trainingDataPoints.size() - 1 ; i += 1)
 		{
@@ -64,18 +54,18 @@ public class ANNMatricialVisual extends ANNMatricial
 			errorOutputsToTargets.add(target != 0 ? Math.abs((target - output) / target) : Math.abs((target - output) / 1)) ;
 		}
 
-		trainResultsDataset.setY(errorOutputsToTargets) ;
+		trainResultsGraph.getData().get(0).setY(errorOutputsToTargets) ;
 
-		if (errorDataset.getX().isEmpty())
+		if (errorChart.getData().get(0).getX().isEmpty())
 		{
-			errorDataset.addPoint(0, results.getAvrError());
+			errorChart.getData().get(0).addPoint(0, results.getAvrError());
 			errorChart.setMaxY(results.getAvrError());
 		}
 		else
 		{
-			errorDataset.addPoint(errorDataset.getX().getLast() + 1, results.getAvrError());
+			errorChart.getData().get(0).addPoint(errorChart.getData().get(0).getX().getLast() + 1, results.getAvrError());
 			errorChart.setMaxY(Math.max(errorChart.getMaxY(), results.getAvrError()));
-			errorChart.setMaxX(errorDataset.getX().getLast() + 1);
+			errorChart.setMaxX(errorChart.getData().get(0).getX().getLast() + 1);
 		}
 
 		iter += 1 ;		

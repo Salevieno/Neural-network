@@ -15,9 +15,10 @@ public abstract class ANN
 	protected int[] qtdNeuronsInLayer;
 	protected int qtdLayers ;
 	protected Results results ;
+	protected double trainIterationError ;
 	protected Mode mode ;
 	protected Map<DataPoint, List<Double>> lastOutputsPerDataPoint ;
-	protected final ActivationFunction act ;
+	protected final ActivationFunction act ; // TODO act function para cada layer
 
 	protected static final boolean DEBUG_MODE = true ;
 	protected static final int STD_MAX_ITERATIONS = 100000 ;
@@ -32,6 +33,7 @@ public abstract class ANN
 		this.qtdNeuronsInLayer = qtdNeuronsInLayer ;
 		this.qtdLayers = qtdNeuronsInLayer.length ;
 		this.results = new Results() ;
+		this.trainIterationError = 0 ;
 		this.mode = Mode.train ;
 		this.lastOutputsPerDataPoint = new HashMap<>() ;
 		this.act = act ;
@@ -47,21 +49,6 @@ public abstract class ANN
 
 	protected double calcPointError(double target, double output) { return Math.pow(target - output, 2) * 1.0 / 2.0 ;}
 	protected double calcPointDError(double target, double output) { return (target - output) ;}
-	
-	public double calcTotalError(List<DataPoint> trainingDataPoints)
-	{
-		double error = 0;		
-		for (int t = 0; t <= trainingDataPoints.size() - 1; t += 1)
-		{	
-			List<Double> targets = trainingDataPoints.get(t).getTargets() ;
-			List<Double> outputs = getOutputsAsList() ;
-			for (int n = 0; n <= qtdNeuronsInLayer[qtdLayers - 1] - 1; n += 1)
-			{
-				error += calcPointError(targets.get(n), outputs.get(n)) ;
-			}		
-		}
-		return error ;
-	}
 
 	public Map<DataPoint, List<Double>> getLastOutputsPerDataPoint() { return lastOutputsPerDataPoint ;}
 

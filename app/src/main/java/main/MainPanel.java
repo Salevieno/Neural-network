@@ -41,7 +41,7 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 		this.addMouseListener(this);
         this.addMouseMotionListener(this);
 
-		ann3 = new ANNMatricialVisual(new Point(40, 500), new int[] {2, 1}, false, false) ;
+		ann3 = new ANNMatricialVisual(new Point(40, 500), new int[] {2, 1}, true, false) ;
 		
 		timer = new Timer(0, this);
 		timer.start();
@@ -59,26 +59,27 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 	public void switchANNDisplay() { showANN = !showANN ;}
 	public void switchGraphsDisplay() { showGraphs = !showGraphs ;}
 	
+	private void update()
+	{
+		run() ;
+		display();
+	}
+
 	private void run()
 	{
-		// ann2.run(trainingData.getDataPoints()) ;
+		if (!trainingIsRunning) { return ;}
+
 		ann3.run(trainingData.getDataPoints()) ;
 	}
 	
-	public void display()
+	private void display()
 	{
-		// ann2.displayInfoPanel() ;
-		ann3.displayInfoPanel() ;
-		if (showANN)
-		{
-			// ann2.display() ;
-			// ann2.displayTrainingResultGraph() ;
-			// ann2.displayErrorGraph() ;
+		if (!showANN) { return ;}
 
-			ann3.display() ;
-			ann3.displayTrainingResultGraph() ;
-			ann3.displayErrorGraph() ;
-		}
+		ann3.displayInfoPanel() ;
+		ann3.display() ;
+		ann3.displayTrainingResultGraph() ;
+		ann3.displayErrorGraph() ;
 	}
 
 	@Override
@@ -86,11 +87,7 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 	{
 		super.paintComponent(g);
 		Draw.setGraphics((Graphics2D) g);
-		if (trainingIsRunning)
-		{
-			run() ;
-		}
-		display();
+		update();
 	}
 
 	@Override

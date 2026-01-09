@@ -143,14 +143,6 @@ public class ANNMatricial extends ANN
 		}
 	}
 
-	public void backPropagation(List<DataPoint> trainingData)
-	{
-		for (DataPoint dataPoint : trainingData)
-		{
-			backPropagationIteration(dataPoint) ;
-		}
-	}
-
 	public void backPropagationIteration(DataPoint dataPoint)
 	{
 		deltaMatrices = new ArrayList<>(Collections.nCopies(qtdLayers - 1, new ArrayList<>())) ;
@@ -178,7 +170,6 @@ public class ANNMatricial extends ANN
 		for (int outputID = 0 ; outputID <= qtdNeuronsInLayer[qtdLayers - 1] - 1 ; outputID += 1)
 		{
 			double DO = calcPointDError(targets.get(outputID), neuronOutputs.get(qtdLayers - 1).get(outputID)) ;
-			System.out.println("DO for output " + neuronOutputs.get(qtdLayers - 1).get(outputID) + " - " + targets.get(outputID) + ": " + DO) ;
 			dWeights = dWeights.plus(deltaMatrices.get(outputID).scale(DO));
 		}
 		dWeights = dWeights.elementMult(cMatrix) ;
@@ -194,14 +185,17 @@ public class ANNMatricial extends ANN
 		}
 	}
 
-    public void train(List<DataPoint> trainingData)
+    public void train(List<DataPoint> trainingData) // TODO method name = run train iteration
     {
-        for (int in = 0; in <= trainingData.size() - 1; in += 1)
-        {
-            forwardPropagation(trainingData.get(in).getInputs()) ;
-            backPropagation(trainingData) ;
-			lastOutputsPerDataPoint.put(trainingData.get(in), getOutputsAsList()) ;
-        }
+		trainIterationError = 0 ;
+        for (DataPoint dataPoint : trainingData)
+		{
+			forwardPropagation(dataPoint.getInputs()) ;
+			backPropagationIteration(dataPoint) ;
+			lastOutputsPerDataPoint.put(dataPoint, getOutputsAsList()) ;
+			trainIterationError += calcDataPointError(dataPoint) ;
+		}
+		results.setAvrError(trainIterationError);
 	}
 
 	public void test(List<DataPoint> trainingDataPoints)
@@ -289,7 +283,16 @@ public class ANNMatricial extends ANN
 		return error ;
 	}
 
-	public double calcTotalError(List<DataPoint> trainingData) { return trainingData.stream().map(dp -> calcDataPointError(dp)).mapToDouble(Double::valueOf).sum() ;}
+	public double calcTotalError(List<DataPoint> trainingData)
+	{
+		double totalError = 0 ;
+        for (DataPoint dataPoint : trainingData)
+		{
+			forwardPropagation(dataPoint.getInputs()) ;
+			totalError += calcDataPointError(dataPoint) ;
+		}
+		return totalError ;
+	}
 
 	private SimpleMatrix derivativeMatrix(SimpleMatrix matrix) {
 		// TODO passar isso para a act
@@ -304,8 +307,10 @@ public class ANNMatricial extends ANN
 	public List<SimpleMatrix> getNeuronInputs() { return neuronInputs ;}
 	public List<SimpleMatrix> getNeuronOutputs() { return neuronOutputs ;}
 	public List<SimpleMatrix> getWeights() { return weights ;}
+	public void setWeights(List<SimpleMatrix> weights) { this.weights = weights ;}
 	public List<SimpleMatrix> getdWeights() { return dWeights ;}
 	public List<SimpleMatrix> getBiases() { return biases ;}
+	public void setBiases(List<SimpleMatrix> biases) { this.biases = biases ;}
 	public List<SimpleMatrix> getdBiases() { return dBiases ;}
 	public List<List<SimpleMatrix>> getDeltaMatrices() { return deltaMatrices ;}
 	public ActivationFunction getAct() { return act ;}

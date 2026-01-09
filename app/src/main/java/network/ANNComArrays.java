@@ -1,6 +1,5 @@
 package network;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +17,6 @@ public class ANNComArrays extends ANN
 	private List<Double[]> output;
 
 	private int[] multvec;
-	protected static final Point INITIAL_PANEL_POS = new Point(40, 60) ;
 	
 	// private boolean adaptativeLRate ;
 	
