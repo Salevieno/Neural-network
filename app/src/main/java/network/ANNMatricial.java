@@ -187,6 +187,7 @@ public class ANNMatricial extends ANN
 
     public void train(List<DataPoint> trainingData) // TODO method name = run train iteration
     {
+		deltaError = trainIterationError ;
 		trainIterationError = 0 ;
         for (DataPoint dataPoint : trainingData)
 		{
@@ -195,6 +196,7 @@ public class ANNMatricial extends ANN
 			lastOutputsPerDataPoint.put(dataPoint, getOutputsAsList()) ;
 			trainIterationError += calcDataPointError(dataPoint) ;
 		}
+		deltaError = trainIterationError - deltaError ;
 		results.setAvrError(trainIterationError);
 	}
 
@@ -314,6 +316,8 @@ public class ANNMatricial extends ANN
 	public List<SimpleMatrix> getdBiases() { return dBiases ;}
 	public List<List<SimpleMatrix>> getDeltaMatrices() { return deltaMatrices ;}
 	public ActivationFunction getAct() { return act ;}
+	public double getTrainIterationError() { return trainIterationError ;}
+	public double getDeltaError() { return deltaError ;}
 
 	public void printState()
 	{

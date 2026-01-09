@@ -16,12 +16,14 @@ public abstract class ANN
 	protected int qtdLayers ;
 	protected Results results ;
 	protected double trainIterationError ;
+	protected double deltaError ;
 	protected Mode mode ;
 	protected Map<DataPoint, List<Double>> lastOutputsPerDataPoint ;
 	protected final ActivationFunction act ; // TODO act function para cada layer
 
 	protected static final boolean DEBUG_MODE = true ;
 	protected static final int STD_MAX_ITERATIONS = 100000 ;
+	protected static final double MIN_DELTA_ERROR = 0.0000001 ;
 	protected static final int[] STD_QTD_NEURONS = new int[] {2, 2, 1, 2, 3} ;
 	protected static final Data TRAINING_DATA_POINTS = new Data("training_data.json") ;
 
@@ -57,7 +59,8 @@ public abstract class ANN
 		switch (mode)
 		{
 			case train:
-				if (qtdIter <= iter) { return ;}
+				if (qtdIter <= iter) { System.out.println("Maximum iterations reached! Training stopped." ); return ;}
+				if (1 <= iter && Math.abs(deltaError) <= MIN_DELTA_ERROR) { System.out.println("Minimum delta error reached! Training stopped." ); return ;}
 				train(trainingDataPoints) ;
 				if (this instanceof ANNMatricialVisual)
 				{
