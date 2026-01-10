@@ -22,7 +22,7 @@ public class ANNMatricialTest
     static void beforeAll()
     {        
         qtdNeuronsInLayer = new int[] {2, 2, 2, 3} ;
-        ann = new ANNMatricial(qtdNeuronsInLayer, false, false) ;
+        ann = new ANNMatricial(qtdNeuronsInLayer, false, false, false) ;
 
         // trainingData is already normalized
         DataPoint DP1 = new DataPoint(List.of(1.0, 0.20833333333333), List.of(0.607759, 0.362069, 1.0)) ;

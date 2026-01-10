@@ -21,9 +21,9 @@ public class ANNMatricialVisual extends ANNMatricial
 	protected final Chart trainResultsGraph ;
 	protected final Chart errorChart ;
     
-    public ANNMatricialVisual(Point topLeftPos, int[] qtdNeuronsInLayer, boolean randomizeInitialWeights, boolean randomizeInitialBiases)
+    public ANNMatricialVisual(Point topLeftPos, int[] qtdNeuronsInLayer, boolean randomizeInitialWeights, boolean randomizeInitialBiases, boolean adaptativeLearningRate)
     {
-        super(qtdNeuronsInLayer, randomizeInitialWeights, randomizeInitialBiases) ;
+        super(qtdNeuronsInLayer, randomizeInitialWeights, randomizeInitialBiases, adaptativeLearningRate) ;
         
 		this.infoPanel = new InfoPanel(new Point(topLeftPos.x, topLeftPos.y)) ;
 		this.annPanel = new ANNPanel(new Point(topLeftPos.x + 10 + infoPanel.size.width, topLeftPos.y)) ;

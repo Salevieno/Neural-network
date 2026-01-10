@@ -18,14 +18,10 @@ public class ANNComArrays extends ANN
 
 	private int[] multvec;
 	
-	// private boolean adaptativeLRate ;
-	
-	// private static final double L_RATE_MAX = 0.6 ;
-	// private static final double L_RATE_MIN = 0.0005 ;
 	
 	public ANNComArrays(List<DataPoint> trainingData, boolean randomInitialWeights)
 	{
-		super(STD_QTD_NEURONS, new Sigmoid()) ;
+		super(STD_QTD_NEURONS, new Sigmoid(), false) ;
 		
         this.iter = 0 ;
 		this.qtdNeuronsInLayer = new int[] {trainingData.get(0).getInputs().size(), 2, 2, trainingData.get(0).getTargets().size()} ;
@@ -286,7 +282,7 @@ public class ANNComArrays extends ANN
 		// error = calcAvrError(output, trainingDataPoints) ;
 		// if (AdaptativeLrate)
 		// {
-		// 	learningRate = updateLRate(learningRate, error, L_RATE_MIN, L_RATE_MAX) ;
+		// 	learningRate = F(learningRate, error, L_RATE_MIN, L_RATE_MAX) ;
 		// }
 		
 		//			derror = Math.abs(error - prevError);

@@ -41,7 +41,7 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 		this.addMouseListener(this);
         this.addMouseMotionListener(this);
 
-		ann3 = new ANNMatricialVisual(new Point(40, 500), new int[] {2, 1}, true, false) ;
+		ann3 = new ANNMatricialVisual(new Point(40, 500), new int[] {2, 4, 1}, true, false, true) ;
 		
 		timer = new Timer(0, this);
 		timer.start();

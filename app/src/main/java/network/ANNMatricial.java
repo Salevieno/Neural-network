@@ -11,7 +11,7 @@ import activationFunctions.ActivationFunction;
 import activationFunctions.Sigmoid;
 
 public class ANNMatricial extends ANN
-{
+{//TODO biases and adaptative learning rate
 	private List<SimpleMatrix> neuronInputs ;
 	protected List<SimpleMatrix> neuronOutputs ;
 	protected List<SimpleMatrix> weights ;
@@ -20,11 +20,9 @@ public class ANNMatricial extends ANN
 	private List<SimpleMatrix> dBiases ;
 	private List<List<SimpleMatrix>> deltaMatrices ;
 
-	private static final double STD_INIT_LEARNING_RATE = 0.5 ;
-
-    public ANNMatricial(int[] qtdNeuronsInLayer, boolean randomizeInitialWeights, boolean randomizeInitialBiases)
+    public ANNMatricial(int[] qtdNeuronsInLayer, boolean randomizeInitialWeights, boolean randomizeInitialBiases, boolean adaptativeLearningRate)
     {
-		super(qtdNeuronsInLayer, new Sigmoid()) ;
+		super(qtdNeuronsInLayer, new Sigmoid(), adaptativeLearningRate) ;
 		this.neuronInputs = new ArrayList<>() ;
 		this.neuronOutputs = new ArrayList<>() ;
 		this.qtdNeuronsInLayer = qtdNeuronsInLayer ;
@@ -34,7 +32,6 @@ public class ANNMatricial extends ANN
 			this.neuronOutputs.add(new SimpleMatrix(neuron, 1)) ;
 		}
         this.biasIsActive = false ;
-		this.learningRate = STD_INIT_LEARNING_RATE ;
 		this.weights = initWeights(qtdLayers, randomizeInitialWeights) ;
 		this.dWeights = initMatricesWithZero(qtdLayers) ;
 		this.biases = initBiases(qtdLayers, randomizeInitialBiases) ;
@@ -42,14 +39,14 @@ public class ANNMatricial extends ANN
 		this.deltaMatrices = new ArrayList<>() ;
     }
 
-    public ANNMatricial(boolean randomizeInitialWeights, boolean randomizeInitialBiases)
+    public ANNMatricial(boolean randomizeInitialWeights, boolean randomizeInitialBiases, boolean adaptativeLearningRate)
     {
-        this(STD_QTD_NEURONS, randomizeInitialWeights, randomizeInitialBiases) ;
+        this(STD_QTD_NEURONS, randomizeInitialWeights, randomizeInitialBiases, adaptativeLearningRate) ;
     }
 
     public ANNMatricial()
     {
-        this(true, true) ;
+        this(true, true, false) ;
     }
 
 	private List<SimpleMatrix> initWeights(int Nlayers, boolean randomInitialWeights)
@@ -198,6 +195,10 @@ public class ANNMatricial extends ANN
 		}
 		deltaError = trainIterationError - deltaError ;
 		results.setAvrError(trainIterationError);
+		if (adaptativeLearningRate)
+		{
+			learningRate = updateLRate(learningRate, trainIterationError / trainingData.size(), LEARNING_RATE_MIN, LEARNING_RATE_MAX) ;
+		}
 	}
 
 	public void test(List<DataPoint> trainingDataPoints)

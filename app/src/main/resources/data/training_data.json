@@ -1,92 +1,446 @@
 [
     {
-        "inputs": [
-            0.667811038399742,
-            0.116141138549233
-        ],
-        "targets": [
-            0.686531272834072
-        ]
+        "inputs": [0.3, 0.9],
+        "targets": [0.5]
     },
     {
-        "inputs": [
-            0.440552237389186,
-            0.778397103205371
-        ],
-        "targets": [
-            0.771878600037294
-        ]
+        "inputs": [0.5, 0.8],
+        "targets": [0]
     },
     {
-        "inputs": [
-            0.179577716867547,
-            0.195734286444404
-        ],
-        "targets": [
-            0.59274191940054
-        ]
+        "inputs": [0.9, 0.8],
+        "targets": [1]
     },
     {
-        "inputs": [
-            0.804218473444821,
-            0.787498854588221
-        ],
-        "targets": [
-            0.830857581920552
-        ]
+        "inputs": [0.9, 0.2],
+        "targets": [1]
     },
     {
-        "inputs": [
-            0.763044464844942,
-            0.605310003334471
-        ],
-        "targets": [
-            0.797114163045395
-        ]
+        "inputs": [0.1, 0.4],
+        "targets": [0]
     },
     {
-        "inputs": [
-            0.0521456325942437,
-            0.944052747870132
-        ],
-        "targets": [
-            0.730310478635993
-        ]
+        "inputs": [0.4, 0.6],
+        "targets": [0]
     },
     {
-        "inputs": [
-            0.35308264133371,
-            0.406878144211666
-        ],
-        "targets": [
-            0.681345219845952
-        ]
+        "inputs": [0.4, 1],
+        "targets": [0.5]
     },
     {
-        "inputs": [
-            0.34731473149552,
-            0.118343805557831
-        ],
-        "targets": [
-            0.614355676950644
-        ]
+        "inputs": [0.6, 0.4],
+        "targets": [0]
     },
     {
-        "inputs": [
-            0.111658518188825,
-            0.398763844242532
-        ],
-        "targets": [
-            0.624905480861487
-        ]
+        "inputs": [0.6, 0.1],
+        "targets": [0]
     },
     {
-        "inputs": [
-            0.960137324102974,
-            0.397344192337958
-        ],
-        "targets": [
-            0.795350073251453
-        ]
+        "inputs": [0.8, 0.5],
+        "targets": [1]
+    },
+    {
+        "inputs": [0.2, 0.7],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.4, 0.7],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.7, 0.8],
+        "targets": [1]
+    },
+    {
+        "inputs": [0.4, 0.8],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.7, 0.5],
+        "targets": [1]
+    },
+    {
+        "inputs": [0.2, 0],
+        "targets": [0]
+    },
+    {
+        "inputs": [0, 0.4],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.4, 0],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.3, 1],
+        "targets": [0.5]
+    },
+    {
+        "inputs": [0.5, 0.4],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.7, 0.7],
+        "targets": [1]
+    },
+    {
+        "inputs": [0.5, 0.7],
+        "targets": [0]
+    },
+    {
+        "inputs": [0, 0.3],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.8, 0.4],
+        "targets": [1]
+    },
+    {
+        "inputs": [0.1, 0.2],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.4, 0.4],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.1, 0.3],
+        "targets": [0]
+    },
+    {
+        "inputs": [0, 0.8],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.7, 0.1],
+        "targets": [1]
+    },
+    {
+        "inputs": [0, 0.9],
+        "targets": [0.5]
+    },
+    {
+        "inputs": [0, 0.2],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.7, 0.2],
+        "targets": [1]
+    },
+    {
+        "inputs": [0, 0],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.3, 0.6],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.7, 0.6],
+        "targets": [1]
+    },
+    {
+        "inputs": [0.1, 0.9],
+        "targets": [0.5]
+    },
+    {
+        "inputs": [0.8, 0],
+        "targets": [1]
+    },
+    {
+        "inputs": [0.2, 0.1],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.8, 1],
+        "targets": [1]
+    },
+    {
+        "inputs": [0.9, 0.6],
+        "targets": [1]
+    },
+    {
+        "inputs": [0.3, 0.5],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.5, 0.6],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.9, 0.9],
+        "targets": [1]
+    },
+    {
+        "inputs": [0.6, 0.3],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.7, 1],
+        "targets": [1]
+    },
+    {
+        "inputs": [0.5, 0.5],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.6, 0],
+        "targets": [0]
+    },
+    {
+        "inputs": [0, 0.7],
+        "targets": [0]
+    },
+    {
+        "inputs": [0, 0.5],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.9, 0],
+        "targets": [1]
+    },
+    {
+        "inputs": [0.4, 0.1],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.5, 0.1],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.9, 1],
+        "targets": [1]
+    },
+    {
+        "inputs": [0.1, 0.7],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.7, 0],
+        "targets": [1]
+    },
+    {
+        "inputs": [0, 0.1],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.4, 0.2],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.7, 0.9],
+        "targets": [1]
+    },
+    {
+        "inputs": [0.6, 0.7],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.1, 0],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.5, 0.2],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.3, 0.2],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.2, 1],
+        "targets": [0.5]
+    },
+    {
+        "inputs": [0.2, 0.4],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.1, 0.1],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.7, 0.3],
+        "targets": [1]
+    },
+    {
+        "inputs": [0.6, 1],
+        "targets": [0.5]
+    },
+    {
+        "inputs": [0.8, 0.8],
+        "targets": [1]
+    },
+    {
+        "inputs": [0.5, 1],
+        "targets": [0.5]
+    },
+    {
+        "inputs": [0.8, 0.3],
+        "targets": [1]
+    },
+    {
+        "inputs": [0.6, 0.5],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.3, 0.7],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.2, 0.2],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.3, 0.8],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.6, 0.2],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.3, 0],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.9, 0.1],
+        "targets": [1]
+    },
+    {
+        "inputs": [0.3, 0.4],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.6, 0.6],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.1, 1],
+        "targets": [0.5]
+    },
+    {
+        "inputs": [0.3, 0.1],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.8, 0.7],
+        "targets": [1]
+    },
+    {
+        "inputs": [0.2, 0.8],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.1, 0.8],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.4, 0.5],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.1, 0.5],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.1, 0.6],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.2, 0.5],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.2, 0.6],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.9, 0.4],
+        "targets": [1]
+    },
+    {
+        "inputs": [0.3, 0.3],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.7, 0.4],
+        "targets": [1]
+    },
+    {
+        "inputs": [0.8, 0.9],
+        "targets": [1]
+    },
+    {
+        "inputs": [0.2, 0.9],
+        "targets": [0.5]
+    },
+    {
+        "inputs": [0.8, 0.2],
+        "targets": [1]
+    },
+    {
+        "inputs": [0, 1],
+        "targets": [0.5]
+    },
+    {
+        "inputs": [0.9, 0.5],
+        "targets": [1]
+    },
+    {
+        "inputs": [0.8, 0.1],
+        "targets": [1]
+    },
+    {
+        "inputs": [0.4, 0.3],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.5, 0.3],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.9, 0.3],
+        "targets": [1]
+    },
+    {
+        "inputs": [0.4, 0.9],
+        "targets": [0.5]
+    },
+    {
+        "inputs": [0.5, 0.9],
+        "targets": [0.5]
+    },
+    {
+        "inputs": [0.2, 0.3],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.6, 0.9],
+        "targets": [0.5]
+    },
+    {
+        "inputs": [0.5, 0],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.6, 0.8],
+        "targets": [0]
+    },
+    {
+        "inputs": [0, 0.6],
+        "targets": [0]
+    },
+    {
+        "inputs": [0.9, 0.7],
+        "targets": [1]
+    },
+    {
+        "inputs": [0.8, 0.6],
+        "targets": [1]
+    },
+    {
+        "inputs": [0.8, 0.6],
+        "targets": [1]
     }
 ]
