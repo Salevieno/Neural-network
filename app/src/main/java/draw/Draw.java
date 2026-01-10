@@ -91,7 +91,8 @@ public abstract class Draw
 			for (int n = 0; n <= Nneurons[l] - 1; n += 1)
 			{
 				Point NeuronPos = new Point(pos.x + l * (sx + NeuronSize) + sx + NeuronSize / 2, pos.y + n * (sy + NeuronSize) + sy + NeuronSize / 2) ;
-				DP.drawText(NeuronPos, Align.center, 0, String.valueOf(round(neuronvalue[l][n], 2)), smallFont, color);
+				String neuronValue = Double.isFinite(neuronvalue[l][n]) ? String.valueOf(round(neuronvalue[l][n], 2)) : "∞" ;
+				DP.drawText(NeuronPos, Align.center, 0, neuronValue, smallFont, color);
 			}
 		}
 	}

@@ -31,11 +31,10 @@ public class ANNMatricial extends ANN
 			this.neuronInputs.add(new SimpleMatrix(neuron, 1)) ;
 			this.neuronOutputs.add(new SimpleMatrix(neuron, 1)) ;
 		}
-        this.biasIsActive = false ;
 		this.weights = initWeights(qtdLayers, randomizeInitialWeights) ;
-		this.dWeights = initMatricesWithZero(qtdLayers) ;
+		this.dWeights = initDWeights(qtdLayers) ;
 		this.biases = initBiases(qtdLayers, randomizeInitialBiases) ;
-		this.dBiases = initMatricesWithZero(qtdLayers) ;
+		this.dBiases = initDBiases(qtdLayers) ;
 		this.deltaMatrices = new ArrayList<>() ;
     }
 
@@ -53,8 +52,8 @@ public class ANNMatricial extends ANN
 	{
 		List<SimpleMatrix> weights = new ArrayList<>() ;
 
-		double startValue = 1.0 ;
-		final double inc = 0.0 ;
+		double startValue = 0.1 ;
+		final double inc = 0.1 ;
 		for (int layer = 0; layer <= Nlayers - 2; layer += 1)
 		{
 			int qtdNeuronsCurrentLayer = qtdNeuronsInLayer[layer] ;
@@ -80,23 +79,34 @@ public class ANNMatricial extends ANN
 		return weights ;
 	}
 
-	private List<SimpleMatrix> initMatricesWithZero(int Nlayers)
+	private List<SimpleMatrix> initDWeights(int Nlayers)
 	{
-		List<SimpleMatrix> deltaMatrices = new ArrayList<>() ;
+		List<SimpleMatrix> deltaWeights = new ArrayList<>() ;
 
 		for (int i = 0; i <= Nlayers - 2; i += 1)
 		{
-			deltaMatrices.add(new SimpleMatrix(qtdNeuronsInLayer[i + 1], qtdNeuronsInLayer[i])) ;
+			deltaWeights.add(new SimpleMatrix(qtdNeuronsInLayer[i + 1], qtdNeuronsInLayer[i])) ;
 		}
-		return deltaMatrices ;
+		return deltaWeights ;
+	}
+
+	private List<SimpleMatrix> initDBiases(int Nlayers)
+	{
+		List<SimpleMatrix> deltaBiases = new ArrayList<>() ;
+
+		for (int i = 1; i <= Nlayers - 1; i += 1)
+		{
+			deltaBiases.add(new SimpleMatrix(qtdNeuronsInLayer[i], 1)) ;
+		}
+		return deltaBiases ;
 	}
 
 	private List<SimpleMatrix> initBiases(int Nlayers, boolean randomInitialBiases)
 	{
 		List<SimpleMatrix> biases = new ArrayList<>() ;
 
-		double startValue = 0.35 ;
-		final double inc = 0.25 ;
+		double startValue = 0.1 ;
+		final double inc = 0.1 ;
 		for (int layer = 0; layer <= Nlayers - 2; layer += 1)
 		{
 			int qtdNeuronsCurrentLayer = qtdNeuronsInLayer[layer + 1] ;
@@ -105,8 +115,11 @@ public class ANNMatricial extends ANN
 
 			if (!randomInitialBiases)
 			{
-				biases.get(biases.size() - 1).fill(startValue);
-				startValue += inc ;
+				for (int row = 0 ; row <= biases.get(layer).getNumRows() - 1 ; row += 1)
+				{
+					biases.get(layer).set(row, 0, startValue) ;
+					startValue += inc ;
+				}
 			}
 		}
 
@@ -157,8 +170,11 @@ public class ANNMatricial extends ANN
 
 			SimpleMatrix dWeightsMatrix = calcDWeights(layer, cMatrix, deltaMatrices.get(layer - 1), dataPoint.getTargets()) ;
 			dWeights.set(layer - 1, dWeightsMatrix) ;
+			SimpleMatrix dBiasMatrix = calcDBias(layer, dWeightsMatrix) ;
+			dBiases.set(layer - 1, dBiasMatrix) ;
 		}
 		updateWeights(dWeights) ;
+		updateBiases(dBiases) ;
 	}
 
 	private SimpleMatrix calcDWeights(int layer, SimpleMatrix cMatrix, List<SimpleMatrix> deltaMatrices, List<Double> targets)
@@ -179,6 +195,26 @@ public class ANNMatricial extends ANN
 		for (int i = 0 ; i <= weights.size() - 1 ; i+= 1)
 		{
 			weights.set(i, weights.get(i).plus(dWeights.get(i)));
+		}
+	}
+
+	private SimpleMatrix calcDBias(int layer, SimpleMatrix dWeightsInPrevLayer)
+	{
+		SimpleMatrix dBias = new SimpleMatrix(qtdNeuronsInLayer[layer], 1);
+		double neuronOutputPrevLayerAtTop = neuronOutputs.get(layer - 1).get(0);
+		// TODO atualizar biases mesmo se for 0
+		if (neuronOutputPrevLayerAtTop != 0)
+		{
+			dBias = dWeightsInPrevLayer.extractVector(false, 0).scale(1 / neuronOutputPrevLayerAtTop);
+		}
+		return dBias ;
+	}
+
+	private void updateBiases(List<SimpleMatrix> dBiases)
+	{
+		for (int i = 0 ; i <= biases.size() - 1 ; i+= 1)
+		{
+			biases.set(i, biases.get(i).plus(dBiases.get(i)));
 		}
 	}
 
@@ -272,7 +308,10 @@ public class ANNMatricial extends ANN
 
 	}
 
-	public double calcOutputError(DataPoint dataPoint, int outputID) { return calcPointError(dataPoint.getTargets().get(outputID), getOutputs().get(outputID)) ;}
+	public double calcOutputError(DataPoint dataPoint, int outputID)
+	{
+		return calcPointError(dataPoint.getTargets().get(outputID), getOutputs().get(outputID)) ;
+	}
 
 	private double calcDataPointError(DataPoint dataPoint)
 	{
@@ -307,6 +346,8 @@ public class ANNMatricial extends ANN
 		return Arrays.stream(getOutputs().getDDRM().getData()).boxed().toList() ;
 	}
 
+	public void activateBiases() { this.biasIsActive = true ;}
+	public void deactivateBiases() { this.biasIsActive = false ;}
 	public List<SimpleMatrix> getNeuronInputs() { return neuronInputs ;}
 	public List<SimpleMatrix> getNeuronOutputs() { return neuronOutputs ;}
 	public List<SimpleMatrix> getWeights() { return weights ;}

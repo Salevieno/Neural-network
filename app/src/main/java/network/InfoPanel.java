@@ -34,7 +34,7 @@ public class InfoPanel extends Draggable
 			"Bias: " + String.valueOf(biasIsActive),
 			"Iteração: " + String.valueOf(iter),
 			"Lrate: " + String.valueOf(learningRate),
-			"Erro: " + String.valueOf(round(errorPerc, 5)),
+			"Erro: " + (Double.isFinite(errorPerc) ? String.valueOf(round(errorPerc, 5)) : "∞"),
 			"Mode: " + mode
 		} ;
 		Draw.text(titlePos, "General info", Palette.cyan);
