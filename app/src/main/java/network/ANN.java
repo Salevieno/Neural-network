@@ -29,6 +29,7 @@ public abstract class ANN
 	protected static final int STD_MAX_ITERATIONS = 100000 ;
 	protected static final double MIN_DELTA_ERROR = 0.0000001 ;
 	protected static final int[] STD_QTD_NEURONS = new int[] {2, 2, 1, 2, 3} ;
+	protected static final double TRAINING_SET_PERCENTAGE = 0.8 ;
 	protected static final Data TRAINING_DATA_POINTS = new Data("training_data.json") ;
 
 	public ANN(int[] qtdNeuronsInLayer, ActivationFunction act, boolean adaptativeLearningRate)
@@ -49,7 +50,7 @@ public abstract class ANN
 
 	public abstract void forwardPropagation(List<Double> input) ;
     public abstract void train(List<DataPoint> trainingDataPoints) ;
-    public abstract void test(List<DataPoint> trainingDataPoints) ;
+    public abstract void test(List<DataPoint> testingDataPoints) ;
     public abstract List<Double> use(List<Double> inputs) ;
 	protected abstract List<Double> getOutputsAsList() ;
 
@@ -63,7 +64,7 @@ public abstract class ANN
 
 	public Map<DataPoint, List<Double>> getLastOutputsPerDataPoint() { return lastOutputsPerDataPoint ;}
 
-	public void run(List<DataPoint> trainingDataPoints)
+	public void run(List<DataPoint> trainingDataPoints, List<DataPoint> testingDataPoints)
 	{
 		switch (mode)
 		{
@@ -79,7 +80,11 @@ public abstract class ANN
 				return ;
 
 			case test:
-				test(trainingDataPoints) ;
+				test(testingDataPoints) ;
+				if (this instanceof ANNMatricialVisual)
+				{
+					((ANNMatricialVisual) this).updateResults(testingDataPoints) ;
+				}
 				
 				return ;
 
@@ -94,5 +99,7 @@ public abstract class ANN
 	}
 
 	public int[] getQtdNeuronsInLayer() { return qtdNeuronsInLayer ; }
+
+	public void setMode(Mode mode) { this.mode = mode ; }
 
 }

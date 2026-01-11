@@ -18,7 +18,8 @@ public class MainFrame extends JFrame
 
 	private static final String ImagesPath ;
 	private static final ImageIcon UseIcon ;
-	private static final ImageIcon PlayIcon ;
+	private static final ImageIcon TestIcon ;
+	private static final ImageIcon TrainIcon ;
 	private static final ImageIcon ANNIcon ;
 	private static final ImageIcon GraphsIcon ;
 
@@ -29,7 +30,8 @@ public class MainFrame extends JFrame
 	{
 		ImagesPath = MainFrame.class.getResource("/assets/").getPath() ;
 		UseIcon = new ImageIcon(ImagesPath + "PlayIcon.png");
-		PlayIcon = new ImageIcon(ImagesPath + "PlayIcon.png");
+		TestIcon = new ImageIcon(ImagesPath + "PlayIcon.png");
+		TrainIcon = new ImageIcon(ImagesPath + "PlayIcon.png");
 		ANNIcon = new ImageIcon(ImagesPath + "ANNIcon.png");
 		GraphsIcon = new ImageIcon(ImagesPath + "graphs.png");
 	
@@ -41,20 +43,23 @@ public class MainFrame extends JFrame
 	public void addButtons()
 	{
 
-		JButton trainOneIteration = createButton(UseIcon);
-		JButton PlayButton = createButton(PlayIcon);
-		JButton NNButton = createButton(ANNIcon);
-		JButton GraphsButton = createButton(GraphsIcon);
+		JButton trainOneIterationButton = createButton(UseIcon);
+		JButton testButton = createButton(TestIcon);
+		JButton trainButton = createButton(TrainIcon);
+		JButton displayANNButton = createButton(ANNIcon);
+		JButton displayGraphsButton = createButton(GraphsIcon);
 
-		trainOneIteration.addActionListener(e -> mainPanel.trainOneIteration());
-		PlayButton.addActionListener(e -> mainPanel.switchRunTraining());
-		NNButton.addActionListener(e -> mainPanel.switchANNDisplay());
-		GraphsButton.addActionListener(e -> mainPanel.switchGraphsDisplay());
+		trainOneIterationButton.addActionListener(e -> mainPanel.trainOneIteration());
+		testButton.addActionListener(e -> mainPanel.switchRunTesting());
+		trainButton.addActionListener(e -> mainPanel.switchRunTraining());
+		displayANNButton.addActionListener(e -> mainPanel.switchANNDisplay());
+		displayGraphsButton.addActionListener(e -> mainPanel.switchGraphsDisplay());
 		
-		this.add(trainOneIteration);
-		this.add(PlayButton);
-		this.add(NNButton);
-		this.add(GraphsButton);
+		this.add(trainOneIterationButton);
+		this.add(testButton);
+		this.add(trainButton);
+		this.add(displayANNButton);
+		this.add(displayGraphsButton);
 		
 	}
 	

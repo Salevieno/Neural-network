@@ -18,6 +18,7 @@ import draw.Draw;
 import network.ANNMatricialVisual;
 import network.Data;
 import network.Draggable;
+import network.Mode;
 
 public class MainPanel extends JPanel implements ActionListener, MouseListener, MouseMotionListener 
 {
@@ -25,9 +26,11 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 	private final Timer timer;
 	private final Color bgColor = new Color(10, 20, 50) ;
 	private final Data trainingData = new Data("training_data.json") ;
+	private final Data testingData = new Data("testing_data.json") ;
 	private final ANNMatricialVisual ann3 ;
 
 	private boolean trainingIsRunning = false ;
+	private boolean testingIsRunning = false ;
 	private boolean showANN = true ;
 	private boolean showGraphs = false;
 
@@ -56,7 +59,18 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 			((ANNMatricialVisual) ann3).updateResults(trainingData.getDataPoints()) ;
 		}
 	}
-	public void switchRunTraining() { trainingIsRunning = !trainingIsRunning ;}
+	public void switchRunTraining()
+	{
+		ann3.setMode(Mode.train) ;
+		trainingIsRunning = !trainingIsRunning ;
+		testingIsRunning = false ;
+	}
+	public void switchRunTesting()
+	{
+		ann3.setMode(Mode.test) ;
+		trainingIsRunning = false ;
+		testingIsRunning = !testingIsRunning ;
+	}
 	public void switchANNDisplay() { showANN = !showANN ;}
 	public void switchGraphsDisplay() { showGraphs = !showGraphs ;}
 	
@@ -68,9 +82,10 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 
 	private void run()
 	{
-		if (!trainingIsRunning) { return ;}
+		if (!trainingIsRunning && !testingIsRunning) { return ;}
 
-		ann3.run(trainingData.getDataPoints()) ;
+		ann3.run(trainingData.getDataPoints(), testingData.getDataPoints()) ;
+		testingIsRunning = false ;
 	}
 	
 	private void display()
