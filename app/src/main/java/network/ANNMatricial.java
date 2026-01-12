@@ -238,7 +238,7 @@ public class ANNMatricial extends ANN
 	}
 
 	public void test(List<DataPoint> testingDataPoints)
-	{System.out.println("testing");
+	{
 		for (DataPoint dataPoint : testingDataPoints)
 		{
 			forwardPropagation(dataPoint.getInputs()) ;

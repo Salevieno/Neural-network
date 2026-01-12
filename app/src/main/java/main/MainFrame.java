@@ -20,6 +20,7 @@ public class MainFrame extends JFrame
 	private static final ImageIcon UseIcon ;
 	private static final ImageIcon TestIcon ;
 	private static final ImageIcon TrainIcon ;
+	private static final ImageIcon TrainPauseIcon ;
 	private static final ImageIcon ANNIcon ;
 	private static final ImageIcon GraphsIcon ;
 
@@ -29,11 +30,12 @@ public class MainFrame extends JFrame
 	static
 	{
 		ImagesPath = MainFrame.class.getResource("/assets/").getPath() ;
-		UseIcon = new ImageIcon(ImagesPath + "PlayIcon.png");
-		TestIcon = new ImageIcon(ImagesPath + "PlayIcon.png");
-		TrainIcon = new ImageIcon(ImagesPath + "PlayIcon.png");
-		ANNIcon = new ImageIcon(ImagesPath + "ANNIcon.png");
-		GraphsIcon = new ImageIcon(ImagesPath + "graphs.png");
+		UseIcon = new ImageIcon(ImagesPath + "TrainOnce.png");
+		TestIcon = new ImageIcon(ImagesPath + "Test.png");
+		TrainIcon = new ImageIcon(ImagesPath + "Train.png");
+		TrainPauseIcon = new ImageIcon(ImagesPath + "TrainPause.png");
+		ANNIcon = new ImageIcon(ImagesPath + "ANN.png");
+		GraphsIcon = new ImageIcon(ImagesPath + "Chart.png");
 	
 		instance = new MainFrame() ;
 	}
@@ -51,7 +53,17 @@ public class MainFrame extends JFrame
 
 		trainOneIterationButton.addActionListener(e -> mainPanel.trainOneIteration());
 		testButton.addActionListener(e -> mainPanel.switchRunTesting());
-		trainButton.addActionListener(e -> mainPanel.switchRunTraining());
+		trainButton.addActionListener(e -> {			
+			if (trainButton.getIcon() == TrainIcon)
+			{
+				trainButton.setIcon(TrainPauseIcon) ;
+			}
+			else
+			{
+				trainButton.setIcon(TrainIcon) ;
+			}
+			mainPanel.switchRunTraining() ;
+		});
 		displayANNButton.addActionListener(e -> mainPanel.switchANNDisplay());
 		displayGraphsButton.addActionListener(e -> mainPanel.switchGraphsDisplay());
 		
