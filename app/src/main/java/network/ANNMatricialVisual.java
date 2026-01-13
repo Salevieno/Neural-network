@@ -51,7 +51,7 @@ public class ANNMatricialVisual extends ANNMatricial
 		{
 			double target = dp.getTargets().get(0) ;
 			double output = getLastOutputsPerDataPoint().get(dp).get(0) ;
-			double outputError = target != 0 ? Math.abs((target - output) / target) : Math.abs((target - output) / 1) ;
+			double outputError = (target + output) != 0 ? Math.abs((target - output) / (target + output)) : Math.abs((target - output) / 1) ;
 			errorOutputsToTargets.add(outputError) ;
 		}
 		errorDatapointChart.getData().get(datasetIndex).setY(errorOutputsToTargets) ;		

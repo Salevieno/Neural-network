@@ -8,26 +8,30 @@ import java.util.List;
 
 import org.ejml.simple.SimpleMatrix;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class ANNMatricialTest
 {
     private static ANNMatricial ann ;
     private static ANNMatricial annComBias ;
-    private static int[] qtdNeuronsInLayer ;
     private static List<DataPoint> trainingData ;
 
     @BeforeAll
     static void beforeAll()
-    {        
-        qtdNeuronsInLayer = new int[] {2, 2, 2, 3} ;
-        ann = new ANNMatricial(qtdNeuronsInLayer, false, false, false) ;
-        annComBias = new ANNMatricial(qtdNeuronsInLayer, false, false, false) ;
-        annComBias.activateBiases() ;
-
+    {
         // trainingData is already normalized
         DataPoint DP1 = new DataPoint(List.of(1.0, 0.20833333333333), List.of(0.607759, 0.362069, 1.0)) ;
         trainingData = List.of(DP1) ;
+    }
+
+    @BeforeEach
+    void beforeEach()
+    {        
+        int[] qtdNeuronsInLayer = new int[] {2, 2, 2, 3} ;
+        ann = new ANNMatricial(qtdNeuronsInLayer, false, false, false) ;
+        annComBias = new ANNMatricial(qtdNeuronsInLayer, false, false, false) ;
+        annComBias.activateBiases() ;
     }
 
     @Test

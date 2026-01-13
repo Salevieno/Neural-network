@@ -5,13 +5,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.checkerframework.checker.units.qual.A;
 import org.ejml.simple.SimpleMatrix;
 
 import activationFunctions.ActivationFunction;
 import activationFunctions.Sigmoid;
 
 public class ANNMatricial extends ANN
-{//TODO biases and adaptative learning rate
+{
 	private List<SimpleMatrix> neuronInputs ;
 	protected List<SimpleMatrix> neuronOutputs ;
 	protected List<SimpleMatrix> weights ;
@@ -158,9 +159,7 @@ public class ANNMatricial extends ANN
 		deltaMatrices = new ArrayList<>(Collections.nCopies(qtdLayers - 1, new ArrayList<>())) ;
 
 		for (int layer = qtdLayers - 1 ; 1 <= layer ; layer += -1)
-		{
-			SimpleMatrix cMatrix = calcCMatrix(layer - 1) ;
-			
+		{			
 			deltaMatrices.set(layer - 1, new ArrayList<>()) ;
 			for (int outputID = 0 ; outputID <= qtdNeuronsInLayer[qtdLayers - 1] - 1 ; outputID += 1)
 			{
@@ -168,25 +167,20 @@ public class ANNMatricial extends ANN
 				deltaMatrices.get(layer - 1).add(deltaMatrix);
 			}
 
-			SimpleMatrix dWeightsMatrix = calcDWeights(layer, cMatrix, deltaMatrices.get(layer - 1), dataPoint.getTargets()) ;
-			dWeights.set(layer - 1, dWeightsMatrix) ;
-			SimpleMatrix dBiasMatrix = calcDBias(layer, dWeightsMatrix) ;
+			SimpleMatrix dBiasMatrix = calcDBias(layer, deltaMatrices.get(layer - 1), dataPoint.getTargets()) ;
 			dBiases.set(layer - 1, dBiasMatrix) ;
+			SimpleMatrix dWeightsMatrix = calcDWeights(layer, dBiasMatrix) ;
+			dWeights.set(layer - 1, dWeightsMatrix) ;
 		}
 		updateWeights(dWeights) ;
 		updateBiases(dBiases) ;
 	}
 
-	private SimpleMatrix calcDWeights(int layer, SimpleMatrix cMatrix, List<SimpleMatrix> deltaMatrices, List<Double> targets)
+	private SimpleMatrix calcDWeights(int layer, SimpleMatrix dBiasMatrix)
 	{
-		SimpleMatrix dWeights = new SimpleMatrix(qtdNeuronsInLayer[layer], qtdNeuronsInLayer[layer - 1]);
-		for (int outputID = 0 ; outputID <= qtdNeuronsInLayer[qtdLayers - 1] - 1 ; outputID += 1)
-		{
-			double DO = calcPointDError(targets.get(outputID), neuronOutputs.get(qtdLayers - 1).get(outputID)) ;
-			dWeights = dWeights.plus(deltaMatrices.get(outputID).scale(DO));
-		}
-		dWeights = dWeights.elementMult(cMatrix) ;
-		dWeights = dWeights.scale(learningRate);
+		SimpleMatrix neuronOutputsPrevLayer = neuronOutputs.get(layer - 1) ;
+		SimpleMatrix dWeights = neuronOutputsPrevLayer.mult(dBiasMatrix.transpose()).transpose() ;
+
 		return dWeights ;
 	}
 
@@ -198,15 +192,17 @@ public class ANNMatricial extends ANN
 		}
 	}
 
-	private SimpleMatrix calcDBias(int layer, SimpleMatrix dWeightsInPrevLayer)
-	{
+	private SimpleMatrix calcDBias(int layer, List<SimpleMatrix> deltaMatrices, List<Double> targets)
+	{		
 		SimpleMatrix dBias = new SimpleMatrix(qtdNeuronsInLayer[layer], 1);
-		double neuronOutputPrevLayerAtTop = neuronOutputs.get(layer - 1).get(0);
-		// TODO atualizar biases mesmo se for 0
-		if (neuronOutputPrevLayerAtTop != 0)
+		for (int outputID = 0 ; outputID <= qtdNeuronsInLayer[qtdLayers - 1] - 1 ; outputID += 1)
 		{
-			dBias = dWeightsInPrevLayer.extractVector(false, 0).scale(1 / neuronOutputPrevLayerAtTop);
+			double DO = calcPointDError(targets.get(outputID), neuronOutputs.get(qtdLayers - 1).get(outputID)) ;
+			dBias = dBias.plus(deltaMatrices.get(outputID).scale(DO));
 		}
+
+		dBias = dBias.elementMult(derivativeMatrix(neuronOutputs.get(layer))) ;
+		dBias = dBias.scale(learningRate);
 		return dBias ;
 	}
 
@@ -263,51 +259,35 @@ public class ANNMatricial extends ANN
 
 	protected SimpleMatrix getOutputs() { return neuronOutputs.getLast() ;}
 
-	private SimpleMatrix calcCMatrix(int layer)
-	{
-		// [C] of layer N = {f'(x0) f'(x1) ... f'(xn)}^T * {n0 n1 ... nn}. {f} vector for layer N + 1 and {n} vector for layer N
-		SimpleMatrix cMatrix = neuronOutputs.get(layer).mult(derivativeMatrix(neuronOutputs.get(layer + 1)).transpose()).transpose() ;
-		return cMatrix ;
-	}
-
 	private SimpleMatrix calcDeltasToLayer(int layer, int outputID)
 	{
-		SimpleMatrix deltaMatrix = new SimpleMatrix(qtdNeuronsInLayer[layer + 1], qtdNeuronsInLayer[layer]) ;
+		SimpleMatrix deltaMatrix = new SimpleMatrix(qtdNeuronsInLayer[layer + 1], 1) ;
 
 		// last layer
 		if (layer == qtdLayers - 2)
 		{
-			SimpleMatrix rowVector = new SimpleMatrix(1, qtdNeuronsInLayer[layer]);
-			rowVector.fill(1.0);
-
-			// Insert a row vector filled with 1s into the specific row of index outputID
-			deltaMatrix.insertIntoThis(outputID, 0, rowVector);
-
+			deltaMatrix.set(outputID, 0, 1.0);
 			return deltaMatrix ;
 		}
 		
 		// before last layer
 		if (layer == qtdLayers - 3)
 		{
-			SimpleMatrix derivativeMatrix = derivativeMatrix(neuronOutputs.get(layer + 2)) ;
+			SimpleMatrix dOutputsNextNextLayer = derivativeMatrix(neuronOutputs.get(layer + 2)) ;
 			SimpleMatrix weightRow = weights.get(layer + 1).extractVector(true, outputID) ;
-			SimpleMatrix deltaMatrixCol = weightRow.transpose().scale(derivativeMatrix.get(outputID)) ;
-			for (int col = 0 ; col <= deltaMatrix.getNumCols() - 1 ; col += 1)
-			{
-				deltaMatrix.insertIntoThis(0, col, deltaMatrixCol);
-			}
+			deltaMatrix.insertIntoThis(0, 0, weightRow.transpose().scale(dOutputsNextNextLayer.get(outputID)));
 
 			return deltaMatrix ;
 		}
 
 		// layers before that
+		// TODO otimizar, se possível
 		SimpleMatrix dNeuronVector = derivativeMatrix(neuronOutputs.get(layer + 2)) ;
-		SimpleMatrix deltaMatrixCol = dNeuronVector.transpose().mult(deltaMatrices.get(layer + 1).get(outputID).elementMult(weights.get(layer + 1))) ;
-		for (int row = 0 ; row <= deltaMatrix.getNumRows() - 1 ; row += 1)
-		{
-			deltaMatrix.insertIntoThis(row, 0, SimpleMatrix.filled(1, deltaMatrix.getNumCols(), deltaMatrixCol.get(0, row)));
-		}
-
+		SimpleMatrix weightMatrixNextLayer = weights.get(layer + 1) ;
+		SimpleMatrix deltaMatrixNextLayer = deltaMatrices.get(layer + 1).get(outputID) ;
+		SimpleMatrix ones = SimpleMatrix.ones(1, weightMatrixNextLayer.getNumCols()) ;
+		SimpleMatrix temp = weightMatrixNextLayer.elementMult(deltaMatrixNextLayer.mult(ones));
+		deltaMatrix = dNeuronVector.transpose().mult(temp).transpose() ;
 		return deltaMatrix ;
 
 	}
