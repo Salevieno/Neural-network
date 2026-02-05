@@ -21,9 +21,9 @@ public class ANNMatricialVisual extends ANNMatricial
 	protected final Chart errorDatapointChart ;
 	protected final Chart errorTotalChart ;
     
-    public ANNMatricialVisual(Point topLeftPos, int[] qtdNeuronsInLayer, boolean randomizeInitialWeights, boolean randomizeInitialBiases, boolean adaptativeLearningRate)
+    public ANNMatricialVisual(Point topLeftPos, int[] qtdNeuronsInLayer, boolean randomizeInitialWeights, boolean randomizeInitialBiases, boolean adaptativeLearningRate, boolean biasOnFirstLayer)
     {
-        super(qtdNeuronsInLayer, randomizeInitialWeights, randomizeInitialBiases, adaptativeLearningRate) ;
+        super(qtdNeuronsInLayer, randomizeInitialWeights, randomizeInitialBiases, adaptativeLearningRate, biasOnFirstLayer) ;
         
 		this.infoPanel = new InfoPanel(new Point(topLeftPos.x, topLeftPos.y)) ;
 		this.annPanel = new ANNPanel(new Point(topLeftPos.x + 10 + infoPanel.size.width, topLeftPos.y)) ;
@@ -39,6 +39,11 @@ public class ANNMatricialVisual extends ANNMatricial
 		errorDatapointChart.addDataset(new Dataset());
 		errorDatapointChart.setPos(Util.translate(topLeftPos, 730, 97));
 		errorDatapointChart.setDataSetColor(List.of(Palette.blue, Palette.green)) ;
+    }
+
+    public ANNMatricialVisual(Point topLeftPos, int[] qtdNeuronsInLayer, boolean randomizeInitialWeights, boolean randomizeInitialBiases, boolean adaptativeLearningRate)
+    {
+        this(topLeftPos, qtdNeuronsInLayer, randomizeInitialWeights, randomizeInitialBiases, adaptativeLearningRate, true) ;
     }
 
 	public void updateResults(List<DataPoint> dataPoints)
@@ -115,10 +120,16 @@ public class ANNMatricialVisual extends ANNMatricial
 
         double[][] neuronsAsDoubleArray = new double[qtdLayers][] ;
         double[][][] weightsAsDoubleArray = new double[qtdLayers - 1][][] ;
+        double[][] biasesAsDoubleArray = new double[qtdLayers][] ;
 
         for (int i = 0 ; i <= qtdLayers - 1 ; i += 1)
         {
             neuronsAsDoubleArray[i] = neuronOutputs.get(i).getDDRM().getData() ;
+        }
+
+        for (int i = 0 ; i <= qtdLayers - 1 ; i += 1)
+        {
+            biasesAsDoubleArray[i] = biases.get(i).getDDRM().getData() ;
         }
 
         for (int i = 0; i <= qtdLayers - 2; i += 1)
@@ -137,6 +148,6 @@ public class ANNMatricialVisual extends ANNMatricial
             weightsAsDoubleArray[i] = weightArray ;
         }
 
-		annPanel.display(qtdNeuronsInLayer, TRAINING_DATA_POINTS.getDataPoints().get(0).getInputs(), TRAINING_DATA_POINTS.getDataPoints().get(0).getTargets(), neuronsAsDoubleArray, weightsAsDoubleArray, maxWeight(weightsAsDoubleArray)) ; 
+		annPanel.display(qtdNeuronsInLayer, TRAINING_DATA_POINTS.getDataPoints().get(0).getInputs(), TRAINING_DATA_POINTS.getDataPoints().get(0).getTargets(), neuronsAsDoubleArray, weightsAsDoubleArray, maxWeight(weightsAsDoubleArray), biasesAsDoubleArray) ; 
 	}
 }

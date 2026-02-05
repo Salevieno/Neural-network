@@ -10,9 +10,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
+
+import org.ejml.simple.SimpleMatrix;
 
 import draw.Draw;
 import network.ANNMatricialVisual;
@@ -44,8 +48,22 @@ public class MainPanel extends JPanel implements ActionListener, MouseListener, 
 		this.addMouseListener(this);
         this.addMouseMotionListener(this);
 
-		ann3 = new ANNMatricialVisual(new Point(40, 500), new int[] {2, 1}, true, false, true) ;
+		ann3 = new ANNMatricialVisual(new Point(40, 500), new int[] {2, 1}, true, false, true, true) ;
 		ann3.activateBiases() ;
+		System.out.println(ann3.getBiases().get(0));
+
+
+		List<SimpleMatrix> biases = new ArrayList<>() ;
+		biases.add(new SimpleMatrix(new double[][] {{-0.6}, {-0.8}})) ;
+		biases.add(new SimpleMatrix(new double[][] {{0.0}})) ;
+
+
+		List<SimpleMatrix> weights = new ArrayList<>() ;
+		weights.add(new SimpleMatrix(new double[][] {{50, 30}})) ;
+
+
+		ann3.setBiases(biases);
+		ann3.setWeights(weights);
 		
 		timer = new Timer(0, this);
 		timer.start();

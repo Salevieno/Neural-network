@@ -18,11 +18,11 @@ public class ANNPanel extends Draggable
         this.size = new Dimension(500, 200) ;
     }
 	
-	public void display(int[] qtdNeuronsInLayer, List<Double> unormalizedInputs, List<Double> unormalizedTargets, double[][] neuronvalue, double[][][] weights, double maxWeight)
+	public void display(int[] qtdNeuronsInLayer, List<Double> unormalizedInputs, List<Double> unormalizedTargets, double[][] neuronvalue, double[][][] weights, double maxWeight, double[][] biases)
 	{
 		
 		Draw.menu(topLeftPos, Align.topLeft, size.width, size.height, 2, new Color[] { Palette.blue, Palette.orange }, null) ;
-		Draw.ann(new Point(topLeftPos.x , topLeftPos.y), qtdNeuronsInLayer, unormalizedInputs, unormalizedTargets, neuronvalue, weights, maxWeight) ;
+		Draw.ann(new Point(topLeftPos.x , topLeftPos.y), qtdNeuronsInLayer, unormalizedInputs, unormalizedTargets, neuronvalue, weights, maxWeight, biases) ;
 
 	}
 }

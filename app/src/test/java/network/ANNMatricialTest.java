@@ -15,6 +15,7 @@ public class ANNMatricialTest
 {
     private static ANNMatricial ann ;
     private static ANNMatricial annComBias ;
+    private static ANNMatricial annComBiasProfundo ;
     private static List<DataPoint> trainingData ;
 
     @BeforeAll
@@ -30,8 +31,10 @@ public class ANNMatricialTest
     {        
         int[] qtdNeuronsInLayer = new int[] {2, 2, 2, 3} ;
         ann = new ANNMatricial(qtdNeuronsInLayer, false, false, false) ;
-        annComBias = new ANNMatricial(qtdNeuronsInLayer, false, false, false) ;
+        annComBias = new ANNMatricial(qtdNeuronsInLayer, false, false, false, false) ;
         annComBias.activateBiases() ;
+        annComBiasProfundo = new ANNMatricial(qtdNeuronsInLayer, false, false, false) ;
+        annComBiasProfundo.activateBiases() ;
     }
 
     @Test
@@ -150,6 +153,8 @@ public class ANNMatricialTest
     }
 
 
+    // Testes com bias
+
     @Test
     void initialParametersComBiasAreCorrect()
     {
@@ -157,6 +162,215 @@ public class ANNMatricialTest
 
         assertArrayEquals(qtdNeuronsPerLayerExpected, annComBias.getQtdNeuronsInLayer());
 
+        List<SimpleMatrix> expectedWeights = new ArrayList<>() ;
+        expectedWeights.add(new SimpleMatrix(new double[][]
+        {
+            {0.1, 0.2},
+            {0.3, 0.4}
+        })) ;
+
+        expectedWeights.add(new SimpleMatrix(new double[][]
+        {
+            {0.5, 0.6},
+            {0.7, 0.8}
+        })) ;
+
+        expectedWeights.add(new SimpleMatrix(new double[][]
+        {
+            {0.9, 1.0},
+            {1.1, 1.2},
+            {1.3, 1.4}
+        })) ;
+        
+        List<SimpleMatrix> expectedBiases = new ArrayList<>() ;
+        expectedBiases.add(new SimpleMatrix(new double[][]
+        {
+            {0.0},
+            {0.0}
+        })) ;
+        expectedBiases.add(new SimpleMatrix(new double[][]
+        {
+            {0.3},
+            {0.4}
+        })) ;
+        expectedBiases.add(new SimpleMatrix(new double[][]
+        {
+            {0.5},
+            {0.6}
+        })) ;
+        expectedBiases.add(new SimpleMatrix(new double[][]
+        {
+            {0.7},
+            {0.8},
+            {0.9}
+        })) ;
+
+        assertSimpleMatrixListEquals(expectedWeights, annComBias.getWeights(), 1e-6);
+        assertSimpleMatrixListEquals(expectedBiases, annComBias.getBiases(), 1e-6);
+    }
+
+    @Test
+    void forwardPropagationComBias()
+    {
+        List<SimpleMatrix> expectedNeuronInputs = new ArrayList<>() ;
+        expectedNeuronInputs.add(new SimpleMatrix(new double[][]
+        {
+            {1.0},
+            {0.20833333333333}
+        })) ;
+        expectedNeuronInputs.add(new SimpleMatrix(new double[][]
+        {
+            {0.441666666666666},
+            {0.783333333333332}
+        })) ;
+        expectedNeuronInputs.add(new SimpleMatrix(new double[][]
+        {
+            {1.21616689328909},
+            {1.57517772746265}
+        })) ;
+        expectedNeuronInputs.add(new SimpleMatrix(new double[][]
+        {
+            {2.22276994343384},
+            {2.6427516979302},
+            {3.06273345242655}
+        })) ;
+        annComBias.forwardPropagation(trainingData.get(0).getInputs()) ;
+        assertSimpleMatrixListEquals(expectedNeuronInputs, annComBias.getNeuronInputs(), 1e-6) ;
+
+        List<SimpleMatrix> expectedNeuronOutputs = new ArrayList<>() ;
+        expectedNeuronOutputs.add(new SimpleMatrix(new double[][]
+        {
+            {1.0},
+            {0.20833333333333}
+        })) ;
+        expectedNeuronOutputs.add(new SimpleMatrix(new double[][]
+        {
+            {0.608656092315871},
+            {0.686398078551927}
+        })) ;
+        expectedNeuronOutputs.add(new SimpleMatrix(new double[][]
+        {
+            {0.771388290479262},
+            {0.828520482002509}
+        })) ;
+        expectedNeuronOutputs.add(new SimpleMatrix(new double[][]
+        {
+            {0.902275705702054},
+            {0.93356283746702},
+            {0.955329093465996}
+        })) ;
+        assertSimpleMatrixListEquals(expectedNeuronOutputs, annComBias.getNeuronOutputs(), 1e-6) ;
+    }
+
+    @Test
+    void backPropagationIterationComBias()
+    {
+        annComBias.forwardPropagation(trainingData.get(0).getInputs()) ;
+        double expectedTotalError = 0.20767039304547 ;
+        assertEquals(expectedTotalError, annComBias.calcTotalError(trainingData), 1e-6) ;
+
+        annComBias.backPropagationIteration(trainingData.get(0)) ;
+
+        List<SimpleMatrix> expectedDeltaBiases = new ArrayList<>() ;
+        expectedDeltaBiases.add(new SimpleMatrix(new double[][]
+        {
+            {0.0},
+            {0.0}
+        })) ;
+        expectedDeltaBiases.add(new SimpleMatrix(new double[][]
+        {
+            {-0.00140863805126431},
+            {-0.00148731551482099}
+        })) ;
+        expectedDeltaBiases.add(new SimpleMatrix(new double[][]
+        {
+            {-0.00528023810258553},
+            {-0.00467673049057136}
+        })) ;
+        expectedDeltaBiases.add(new SimpleMatrix(new double[][]
+        {
+            {-0.0129843957910617},
+            {-0.0177229571400153},
+            {0.00095317477408925}
+        })) ;
+
+        List<SimpleMatrix> expectedDeltaWeights = new ArrayList<>() ;
+        expectedDeltaWeights.add(new SimpleMatrix(new double[][]
+        {
+            {-0.00140863805126431, -0.00029346626068006},
+            {-0.00148731551482099, -0.000309857398921035}
+        })) ;
+
+        expectedDeltaWeights.add(new SimpleMatrix(new double[][]
+        {
+            {-0.00321384909001707, -0.00362434528791138},
+            {-0.00284652050520565, -0.0032100988226334}
+        })) ;
+
+        expectedDeltaWeights.add(new SimpleMatrix(new double[][]
+        {
+            {-0.0100160108721732, -0.0107578378593218},
+            {-0.0136712816104737, -0.0146838329921553},
+            {0.000735267859512664, 0.000789724823261058}
+        })) ;
+
+        assertSimpleMatrixListEquals(expectedDeltaBiases, annComBias.getdBiases(), 1e-6) ;
+        assertSimpleMatrixListEquals(expectedDeltaWeights, annComBias.getdWeights(), 1e-6) ;
+
+        List<SimpleMatrix> expectedBiasesAfterUpdate = new ArrayList<>() ;
+        expectedBiasesAfterUpdate.add(new SimpleMatrix(new double[][]
+        {
+            {0.0},
+            {0.0}
+        })) ;
+        expectedBiasesAfterUpdate.add(new SimpleMatrix(new double[][]
+        {
+            {0.298591361948736},
+            {0.398512684485179}
+        })) ;
+        expectedBiasesAfterUpdate.add(new SimpleMatrix(new double[][]
+        {
+            {0.494719761897414},
+            {0.595323269509429}
+        })) ;
+        expectedBiasesAfterUpdate.add(new SimpleMatrix(new double[][]
+        {
+            {0.687015604208938},
+            {0.782277042859985},
+            {0.900953174774089}
+        })) ;
+
+        List<SimpleMatrix> expectedWeightsAfterUpdate = new ArrayList<>() ;
+        expectedWeightsAfterUpdate.add(new SimpleMatrix(new double[][]
+        {
+            {0.0985913619487357, 0.19970653373932},
+            {0.298512684485179, 0.399690142601079}
+        })) ;
+        expectedWeightsAfterUpdate.add(new SimpleMatrix(new double[][]
+        {
+            {0.496786150909983, 0.596375654712089},
+            {0.697153479494794, 0.796789901177367}
+        })) ;
+        expectedWeightsAfterUpdate.add(new SimpleMatrix(new double[][]
+        {
+            {0.889983989127827, 0.989242162140678},
+            {1.08632871838953, 1.18531616700784},
+            {1.30073526785951, 1.40078972482326}
+        })) ;
+
+        assertSimpleMatrixListEquals(expectedBiasesAfterUpdate, annComBias.getBiases(), 1e-6) ;
+        assertSimpleMatrixListEquals(expectedWeightsAfterUpdate, annComBias.getWeights(), 1e-6) ;
+    }
+
+
+    // Testes com bias profundo
+    
+    @Test
+    void initialParametersComBiasProfundoAreCorrect()
+    {
+        int[] qtdNeuronsPerLayerExpected = new int[] {trainingData.get(0).getInputs().size(), 2, 2, trainingData.get(0).getTargets().size()} ;
+
+        assertArrayEquals(qtdNeuronsPerLayerExpected, annComBiasProfundo.getQtdNeuronsInLayer());
         List<SimpleMatrix> expectedWeights = new ArrayList<>() ;
         expectedWeights.add(new SimpleMatrix(new double[][]
         {
@@ -191,117 +405,174 @@ public class ANNMatricialTest
         expectedBiases.add(new SimpleMatrix(new double[][]
         {
             {0.5},
-            {0.6},
-            {0.7}
+            {0.6}
+        })) ;
+        expectedBiases.add(new SimpleMatrix(new double[][]
+        {
+            {0.7},
+            {0.8},
+            {0.9}
         })) ;
 
-        assertSimpleMatrixListEquals(expectedWeights, annComBias.getWeights(), 1e-6);
-        assertSimpleMatrixListEquals(expectedBiases, annComBias.getBiases(), 1e-6);
+        assertSimpleMatrixListEquals(expectedWeights, annComBiasProfundo.getWeights(), 1e-6);
+        assertSimpleMatrixListEquals(expectedBiases, annComBiasProfundo.getBiases(), 1e-6);
     }
 
     @Test
-    void forwardPropagationComBias()
+    void forwardPropagationComBiasProfundo()
     {
         List<SimpleMatrix> expectedNeuronInputs = new ArrayList<>() ;
         expectedNeuronInputs.add(new SimpleMatrix(new double[][]
         {
-            {1.0},
-            {0.20833333333333}
+            {1.1},
+            {0.40833333333333}
         })) ;
         expectedNeuronInputs.add(new SimpleMatrix(new double[][]
         {
-            {0.241666666666666},
-            {0.583333333333332}
+            {0.491666666666666},
+            {0.893333333333332}
         })) ;
         expectedNeuronInputs.add(new SimpleMatrix(new double[][]
         {
-            {0.965162593103236},
-            {1.30555426854098}
+            {1.23599603463981},
+            {1.60201134544469}
         })) ;
         expectedNeuronInputs.add(new SimpleMatrix(new double[][]
         {
-            {1.93850709889501},
-            {2.34069160368839},
-            {2.74287610848177}
+            {2.22967897822868},
+            {2.65111209981945},
+            {3.07254522141021}
         })) ;
-        annComBias.forwardPropagation(trainingData.get(0).getInputs()) ;
-        assertSimpleMatrixListEquals(expectedNeuronInputs, annComBias.getNeuronInputs(), 1e-6) ;
+        annComBiasProfundo.forwardPropagation(trainingData.get(0).getInputs()) ;
+        assertSimpleMatrixListEquals(expectedNeuronInputs, annComBiasProfundo.getNeuronInputs(), 1e-6) ;
 
         List<SimpleMatrix> expectedNeuronOutputs = new ArrayList<>() ;
         expectedNeuronOutputs.add(new SimpleMatrix(new double[][]
         {
-            {1.0},
-            {0.20833333333333}
+            {1.1},
+            {0.40833333333333}
         })) ;
         expectedNeuronOutputs.add(new SimpleMatrix(new double[][]
         {
-            {0.560124332099995},
-            {0.641834045088731}
+            {0.620498977748359},
+            {0.709577576276054}
         })) ;
         expectedNeuronOutputs.add(new SimpleMatrix(new double[][]
         {
-            {0.724154250719015},
-            {0.786768273247894}
+            {0.774866297251501},
+            {0.83229931070233}
         })) ;
         expectedNeuronOutputs.add(new SimpleMatrix(new double[][]
         {
-            {0.874188040982006},
-            {0.912191497154539},
-            {0.939509756072204}
+            {0.902883213822618},
+            {0.934079501106121},
+            {0.955745949113566}
         })) ;
-        assertSimpleMatrixListEquals(expectedNeuronOutputs, annComBias.getNeuronOutputs(), 1e-6) ;
+        assertSimpleMatrixListEquals(expectedNeuronOutputs, annComBiasProfundo.getNeuronOutputs(), 1e-6) ;
     }
 
     @Test
-    void backPropagationIterationComBias()
+    void backPropagationIterationComBiasProfundo()
     {
-        annComBias.forwardPropagation(trainingData.get(0).getInputs()) ;
-        double expectedTotalError = 0.188639132682291 ;
+        annComBiasProfundo.forwardPropagation(trainingData.get(0).getInputs()) ;
+        double expectedTotalError = 0.208126367989977 ;
 
-        assertEquals(expectedTotalError, annComBias.calcTotalError(trainingData), 1e-6) ;
-        annComBias.backPropagationIteration(trainingData.get(0)) ;
-
-        List<SimpleMatrix> expectedDeltaWeights = new ArrayList<>() ;
-        expectedDeltaWeights.add(new SimpleMatrix(new double[][]
-        {
-            {-0.00198515543984207, -0.000413574049967091},
-            {-0.00216296200396094, -0.000450617084158523}
-        })) ;
-
-        expectedDeltaWeights.add(new SimpleMatrix(new double[][]
-        {
-            {-0.00393696576781461, -0.00451128172678849},
-            {-0.00363501324907516, -0.00416528103476236}
-        })) ;
-
-        expectedDeltaWeights.add(new SimpleMatrix(new double[][]
-        {
-            {-0.0106098546898656, -0.0115272361454322},
-            {-0.0159544958896333, -0.0173340019328258},
-            {0.00124472397445714, 0.00135234907629354}
-        })) ;
+        assertEquals(expectedTotalError, annComBiasProfundo.calcTotalError(trainingData), 1e-6) ;
+        annComBiasProfundo.backPropagationIteration(trainingData.get(0)) ;
 
         List<SimpleMatrix> expectedDeltaBiases = new ArrayList<>() ;
         expectedDeltaBiases.add(new SimpleMatrix(new double[][]
         {
-            {-0.00198515543984207},
-            {-0.00216296200396094}
+            {0.0000611143323439976},
+            {-0.000200969295822099}
         })) ;
         expectedDeltaBiases.add(new SimpleMatrix(new double[][]
         {
-            {-0.00702873548280666},
-            {-0.00648965424416919}
+            {-0.00136584500310366},
+            {-0.0013966677972684}
         })) ;
         expectedDeltaBiases.add(new SimpleMatrix(new double[][]
         {
-            {-0.0146513739018048},
-            {-0.0220319025591468},
-            {0.00171886579857986}
+            {-0.00519861948978896},
+            {-0.0045727848617994}
+        })) ;
+        expectedDeltaBiases.add(new SimpleMatrix(new double[][]
+        {
+            {-0.0129390004646677},
+            {-0.0176107695045008},
+            {0.000935876478194591}
         })) ;
 
-        assertSimpleMatrixListEquals(expectedDeltaWeights, annComBias.getdWeights(), 1e-6) ;
-        assertSimpleMatrixListEquals(expectedDeltaBiases, annComBias.getdBiases(), 1e-6) ;
+        List<SimpleMatrix> expectedDeltaWeights = new ArrayList<>() ;
+        expectedDeltaWeights.add(new SimpleMatrix(new double[][]
+        {
+            {-0.00150242950341402, -0.000557720042933989},
+            {-0.00153633457699524, -0.000570306017217926}
+        })) ;
+
+        expectedDeltaWeights.add(new SimpleMatrix(new double[][]
+        {
+            {-0.00322573807911675, -0.00368882381754591},
+            {-0.0028374083322097, -0.00324474559906745}
+        })) ;
+
+        expectedDeltaWeights.add(new SimpleMatrix(new double[][]
+        {
+            {-0.0100259953801925, -0.01076912116792},
+            {-0.0136459917577022, -0.0146574313195337},
+            {0.000725179141343418, 0.000778929347703882}
+        })) ;
+
+        assertSimpleMatrixListEquals(expectedDeltaBiases, annComBiasProfundo.getdBiases(), 1e-6) ;
+        assertSimpleMatrixListEquals(expectedDeltaWeights, annComBiasProfundo.getdWeights(), 1e-6) ;
+
+        List<SimpleMatrix> expectedBiasesAfterUpdate = new ArrayList<>() ;
+        expectedBiasesAfterUpdate.add(new SimpleMatrix(new double[][]
+        {
+            {0.100061114332344},
+            {0.199799030704178}
+        })) ;
+        expectedBiasesAfterUpdate.add(new SimpleMatrix(new double[][]
+        {
+            {0.298634154996896},
+            {0.398603332202732}
+        })) ;
+        expectedBiasesAfterUpdate.add(new SimpleMatrix(new double[][]
+        {
+            {0.494801380510211},
+            {0.595427215138201}
+        })) ;
+        expectedBiasesAfterUpdate.add(new SimpleMatrix(new double[][]
+        {
+            {0.687060999535332},
+            {0.782389230495499},
+            {0.900935876478195}
+        })) ;
+
+        List<SimpleMatrix> expectedWeightsAfterUpdate = new ArrayList<>() ;
+        expectedWeightsAfterUpdate.add(new SimpleMatrix(new double[][]
+        {
+            {0.098497570496586, 0.199442279957066},
+            {0.298463665423005, 0.399429693982782}
+        })) ;
+
+        expectedWeightsAfterUpdate.add(new SimpleMatrix(new double[][]
+        {
+            {0.496774261920883, 0.596311176182454},
+            {0.69716259166779, 0.796755254400933}
+        })) ;
+
+        expectedWeightsAfterUpdate.add(new SimpleMatrix(new double[][]
+        {
+            {0.889974004619808, 0.98923087883208},
+            {1.0863540082423, 1.18534256868047},
+            {1.30072517914134, 1.4007789293477}
+        })) ;
+
+        assertSimpleMatrixListEquals(expectedBiasesAfterUpdate, annComBiasProfundo.getBiases(), 1e-6) ;
+        assertSimpleMatrixListEquals(expectedWeightsAfterUpdate, annComBiasProfundo.getWeights(), 1e-6) ;
     }
+
 
     private void assertSimpleMatrixListEquals(List<SimpleMatrix> expected, List<SimpleMatrix> actual, double tolerance)
     {

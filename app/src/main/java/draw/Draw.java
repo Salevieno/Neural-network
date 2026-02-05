@@ -97,6 +97,45 @@ public abstract class Draw
 		}
 	}
 
+	private static void biasValues(Point pos, Dimension size, int[] Nneurons, double[][] biasValue)
+	{
+		int NeuronSize = 30;
+		int sx = (size.width - NeuronSize * Nneurons.length) / (Nneurons.length + 1);
+		Color color = Main.palette[6] ;
+
+		for (int l = 0; l <= Nneurons.length - 1; l += 1)
+		{
+			int sy = (size.height - NeuronSize * Nneurons[l]) / (Nneurons[l] + 1);
+			for (int n = 0; n <= Nneurons[l] - 1; n += 1)
+			{
+				Point textPos = new Point(pos.x + l * (sx + NeuronSize) + sx + NeuronSize / 2, pos.y + n * (sy + NeuronSize) + sy + NeuronSize / 2 - 25) ;
+				String biasValueText = Double.isFinite(biasValue[l][n]) ? String.valueOf(round(biasValue[l][n], 2)) : "∞" ;
+				DP.drawText(textPos, Align.center, 0, "(" + biasValueText + ")", smallFont, color);
+			}
+		}
+	}
+
+	private static void weightValues(Point pos, Dimension size, int[] Nneurons, double[][][] weightValue)
+	{
+		int NeuronSize = 30;
+		int sx = (size.width - NeuronSize * Nneurons.length) / (Nneurons.length + 1);
+		Color color = Main.palette[5] ;
+
+		for (int l = 0; l <= Nneurons.length - 2; l += 1)
+		{
+			int sy = (size.height - NeuronSize * Nneurons[l]) / (Nneurons[l] + 1);
+			for (int n1 = 0; n1 <= Nneurons[l + 1] - 1; n1 += 1)
+			{
+				for (int n2 = 0; n2 <= Nneurons[l] - 1; n2 += 1)
+				{
+					Point textPos = new Point(pos.x + l * (sx + NeuronSize) + 3 * sx / 2 + NeuronSize / 2, pos.y + n1 * (sy + NeuronSize) / 2 + n2 * (sy / 2 + NeuronSize) + 3 * sy / 2 + NeuronSize / 2 - 20) ;
+					String biasValueText = Double.isFinite(weightValue[l][n1][n2]) ? String.valueOf(round(weightValue[l][n1][n2], 2)) : "∞" ;
+					DP.drawText(textPos, Align.center, 0, biasValueText, smallFont, color);
+				}
+			}
+		}
+	}
+
 	private static void inputValues(Point pos, Dimension size, int[] Nneurons, List<Double> inputs)
 	{
 		int NeuronSize = 30;
@@ -143,7 +182,7 @@ public abstract class Draw
 		}
 	}
 
-	public static void ann(Point pos, Dimension size, int[] Nneurons, List<Double> inputs, List<Double> targets, double[][] neuronvalue, double[][][] weight, double MaxWeight, boolean DrawLines, Color color)
+	public static void ann(Point pos, Dimension size, int[] Nneurons, List<Double> inputs, List<Double> targets, double[][] neuronvalue, double[][][] weight, double MaxWeight, boolean DrawLines, Color color, double[][] biases)
 	{
 		if (DrawLines)
 		{
@@ -152,6 +191,8 @@ public abstract class Draw
 		
 		neurons(pos, size, Nneurons) ;
 		neuronValues(pos, size, Nneurons, neuronvalue) ;
+		biasValues(pos, size, Nneurons, biases) ;
+		weightValues(pos, size, Nneurons, weight) ;
 		if (inputs != null)
 		{
 			inputValues(pos, size, Nneurons, inputs) ;
@@ -162,9 +203,9 @@ public abstract class Draw
 		}
 	}
 
-	public static void ann(Point pos, int[] Nneurons, List<Double> inputs, List<Double> targets, double[][] neuronvalue, double[][][] weight, double MaxWeight)
+	public static void ann(Point pos, int[] Nneurons, List<Double> inputs, List<Double> targets, double[][] neuronvalue, double[][][] weight, double MaxWeight, double[][] biases)
 	{
-		ann(pos, new Dimension(500, 200), Nneurons, inputs, targets, neuronvalue, weight, MaxWeight, true, Main.palette[0]) ;
+		ann(pos, new Dimension(500, 200), Nneurons, inputs, targets, neuronvalue, weight, MaxWeight, true, Main.palette[0], biases) ;
 	}
 	
 	private static float round(double number, int decimals) { return BigDecimal.valueOf(number).setScale(decimals, RoundingMode.HALF_EVEN).floatValue() ;}
