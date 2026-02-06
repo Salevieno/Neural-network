@@ -10,7 +10,7 @@ public class Sigmoid implements ActivationFunction
 	
 	public double df(double x)
 	{
-		return x * (1 - x);
+		return f(x) * (1 - f(x));
 	}
 	
 }

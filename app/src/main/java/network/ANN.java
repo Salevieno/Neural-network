@@ -14,6 +14,7 @@ public abstract class ANN
 	protected boolean adaptativeLearningRate ;
     protected boolean biasIsActive ;
 	protected boolean biasOnFirstLayer ;
+	protected boolean actFunctionOnFirstLayer ;
 	protected int[] qtdNeuronsInLayer;
 	protected int qtdLayers ;
 	protected Results results ;
@@ -107,6 +108,9 @@ public abstract class ANN
 	public boolean isBiasOnFirstLayer() { return biasOnFirstLayer ; }
 	public void activateBiasOnFirstLayer() { this.biasOnFirstLayer = true ;}
 	public void deactivateBiasOnFirstLayer() { this.biasOnFirstLayer = false ;}
+	public boolean isActFunctionOnFirstLayer() { return actFunctionOnFirstLayer ; }
+	public void activateActFunctionOnFirstLayer() { this.actFunctionOnFirstLayer = true ;}
+	public void deactivateActFunctionOnFirstLayer() { this.actFunctionOnFirstLayer = false ;}
 
 	public void setMode(Mode mode) { this.mode = mode ; }
 }

@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.ejml.simple.SimpleMatrix;
+import org.ejml.simple.SimpleOperations;
 
 import activationFunctions.ActivationFunction;
 import activationFunctions.Sigmoid;
@@ -20,9 +21,9 @@ public class ANNMatricial extends ANN
 	protected List<SimpleMatrix> dBiases ;
 	private List<List<SimpleMatrix>> deltaMatrices ;
 
-    public ANNMatricial(int[] qtdNeuronsInLayer, boolean randomizeInitialWeights, boolean randomizeInitialBiases, boolean adaptativeLearningRate, boolean biasOnFirstLayer)
+    public ANNMatricial(int[] qtdNeuronsInLayer, ActivationFunction activationFunction, boolean randomizeInitialWeights, boolean randomizeInitialBiases, boolean adaptativeLearningRate, boolean biasOnFirstLayer)
     {
-		super(qtdNeuronsInLayer, new Sigmoid(), adaptativeLearningRate) ;
+		super(qtdNeuronsInLayer, activationFunction, adaptativeLearningRate) ;
 		this.biasOnFirstLayer = biasOnFirstLayer ;
 		this.neuronInputs = new ArrayList<>() ;
 		this.neuronOutputs = new ArrayList<>() ;
@@ -37,6 +38,11 @@ public class ANNMatricial extends ANN
 		this.biases = initBiases(qtdLayers, randomizeInitialBiases) ;
 		this.dBiases = initDBiases(qtdLayers) ;
 		this.deltaMatrices = new ArrayList<>() ;
+    }
+
+    public ANNMatricial(int[] qtdNeuronsInLayer, boolean randomizeInitialWeights, boolean randomizeInitialBiases, boolean adaptativeLearningRate, boolean biasOnFirstLayer)
+    {
+		this(qtdNeuronsInLayer, new Sigmoid(), randomizeInitialWeights, randomizeInitialBiases, adaptativeLearningRate, biasOnFirstLayer) ;
     }
 
     public ANNMatricial(int[] qtdNeuronsInLayer, boolean randomizeInitialWeights, boolean randomizeInitialBiases, boolean adaptativeLearningRate)
@@ -141,11 +147,17 @@ public class ANNMatricial extends ANN
 	{
 		neuronInputs.set(0, new SimpleMatrix(qtdNeuronsInLayer[0], 1, true, input.stream().mapToDouble(Double::doubleValue).toArray())) ;
 		neuronOutputs.set(0, new SimpleMatrix(qtdNeuronsInLayer[0], 1, true, input.stream().map(d -> d).mapToDouble(Double::valueOf).toArray())) ;
+		// TODO tem que aplicar activation function na camada de entrada e SIM tem que ajustar todos os testes OU colocar uma condição na derivativeMatrix para não aplicar na camada de entrada
 
 		if (biasIsActive && biasOnFirstLayer)
 		{
 			neuronInputs.set(0, neuronInputs.get(0).plus(biases.get(0))) ;
 			neuronOutputs.set(0, neuronOutputs.get(0).plus(biases.get(0))) ;
+		}
+				
+		if (actFunctionOnFirstLayer)
+		{
+			 neuronOutputs.set(0, neuronInputs.get(0).elementOp((SimpleOperations.ElementOpReal) (row, col, value) -> act.f(value)));
 		}
 
 		for (int layer = 1; layer <= qtdLayers - 1; layer += 1)
@@ -226,7 +238,14 @@ public class ANNMatricial extends ANN
 
 	private SimpleMatrix calcDBias(int layer, SimpleMatrix deltaMatrix, List<Double> targets)
 	{
-		SimpleMatrix dBias = deltaMatrix.elementMult(derivativeMatrix(neuronOutputs.get(layer))).scale(learningRate) ;
+		SimpleMatrix derivativeMatrix = derivativeMatrix(neuronInputs.get(layer)) ;
+
+		if (!actFunctionOnFirstLayer && layer == 0)
+		{
+			derivativeMatrix = SimpleMatrix.ones(qtdNeuronsInLayer[layer], 1) ;
+		}
+
+		SimpleMatrix dBias = deltaMatrix.elementMult(derivativeMatrix).scale(learningRate) ;
 		return dBias ;
 	}
 
@@ -249,13 +268,7 @@ public class ANNMatricial extends ANN
 			lastOutputsPerDataPoint.put(dataPoint, getOutputsAsList()) ;
 			trainIterationError += calcDataPointError(dataPoint) ;
 		}
-		// System.out.println("\n\n Iteration");
-		// System.out.println("dBiases");
-		// System.out.println(dBiases);
-		// System.out.println("biases");
-		// System.out.println(biases);
 		deltaError = trainIterationError - deltaError ;
-		if (deltaError > 0) System.out.println("Error increased!");
 		results.setAvrError(trainIterationError);
 		if (adaptativeLearningRate)
 		{
@@ -301,11 +314,10 @@ public class ANNMatricial extends ANN
 		}
 
 		// layers before that
-		SimpleMatrix dNeuronVector = derivativeMatrix(neuronOutputs.get(layer + 1)) ;
+		SimpleMatrix dInputsNextLayer = derivativeMatrix(neuronInputs.get(layer + 1)) ;
 		SimpleMatrix weightMatrixNextLayer = weights.get(layer) ;
 		SimpleMatrix deltaMatrixNextLayer = deltaMatrices.get(layer + 1).get(0) ;
-		deltaMatrix = weightMatrixNextLayer.transpose().mult(dNeuronVector.elementMult(deltaMatrixNextLayer)) ;
-
+		deltaMatrix = weightMatrixNextLayer.transpose().mult(dInputsNextLayer.elementMult(deltaMatrixNextLayer)) ;
 		return deltaMatrix ;
 	}
 
@@ -338,9 +350,8 @@ public class ANNMatricial extends ANN
 	}
 
 	private SimpleMatrix derivativeMatrix(SimpleMatrix matrix) {
-		// TODO passar isso para a act
-		return matrix.elementMult(matrix.scale(-1).plus(1));
-	}
+		return matrix.elementOp((SimpleOperations.ElementOpReal) (row, col, x) -> act.df(x)) ;
+	}	
 
 	public List<Double> getOutputsAsList()
 	{
